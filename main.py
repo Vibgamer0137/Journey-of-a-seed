@@ -8,7 +8,7 @@ class SeedAdventure:
         main.menu.place(relx=0, rely=0, relheight=1, relwidth=1)
     def forget_menu_frame(main):
         main.menu.place_forget()
-    def move_f_or_b(main, how_much_to_move, f_or_b):
+    def move_f_b(main, how_much_to_move, f_or_b):
         if f_or_b == "f":
             main.player_position += how_much_to_move
         elif f_or_b == "b":
