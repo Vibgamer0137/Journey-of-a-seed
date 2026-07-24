@@ -66,11 +66,53 @@ class SeedAdventure:
             main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
             current_colour = main.colours_for_tiles[main.player_position]
             if current_colour == main.colours[0]:
-                print("Blue tile")
+                main.game.place_forget()
+                blue_cards = [
+                    main.card_blue_1_frame,
+                    main.card_blue_2_frame,
+                    main.card_blue_3_frame,
+                    main.card_blue_4_frame,
+                    main.card_blue_5_frame,
+                    main.card_blue_6_frame,
+                    main.card_blue_7_frame,
+                    main.card_blue_8_frame,
+                    main.card_blue_9_frame,
+                    main.card_blue_10_frame
+                ]
+                main.card = r.choice(blue_cards)
+                main.card.place(relx=0,rely=0,relheight=1,relwidth=1)
             elif current_colour == main.colours[1]:
-                print("Red tile")
+                main.game.place_forget()
+                red_cards = [
+                    main.card_red_11_frame,
+                    main.card_red_12_frame,
+                    main.card_red_13_frame,
+                    main.card_red_14_frame,
+                    main.card_red_15_frame,
+                    main.card_red_16_frame,
+                    main.card_red_17_frame,
+                    main.card_red_18_frame,
+                    main.card_red_19_frame,
+                    main.card_red_20_frame
+                ]
+                main.card = r.choice(red_cards)
+                main.card.place(relx=0,rely=0,relheight=1,relwidth=1)
             elif current_colour == main.colours[2]:
-                print("green tile")
+                main.game.place_forget()
+                green_cards = [
+                    main.card_green_21_frame,
+                    main.card_green_22_frame,
+                    main.card_green_23_frame,
+                    main.card_green_24_frame,
+                    main.card_green_25_frame,
+                    main.card_green_26_frame,
+                    main.card_green_27_frame,
+                    main.card_green_28_frame,
+                    main.card_green_29_frame,
+                    main.card_green_30_frame
+                ]
+                main.card = r.choice(green_cards)
+                main.card.place(relx=0,rely=0,relheight=1,relwidth=1)
             elif current_colour == main.colours[3]:
                 print("yellow tile")
             elif current_colour == main.colours[4]:
