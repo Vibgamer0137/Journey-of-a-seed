@@ -2,16 +2,6 @@ import tkinter as tk
 import random as r
 
 class SeedAdventure:
-    def __init__(main, root):
-        main.root = root
-
-    def show_menu(main):
-        main.menu = tk.Frame(main.root)
-        main.menu.place(relx=0, rely=0, relheight=1, relwidth=1)
-
-    def forget_menu_frame(main):
-        main.menu.place_forget()
-
     def move_f_or_b(main, how_much_to_move, f_or_b):
         if f_or_b == "f":
             main.player_position += how_much_to_move
@@ -31,7 +21,6 @@ class SeedAdventure:
         
         # Moves the player token oval on the canvas
         main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
-
     def frame_new_plus_board_game(main):
         main.game = tk.Frame(main.root)
         main.game.place(relx=0, rely=0, relheight=1, relwidth=1)
@@ -116,16 +105,16 @@ class SeedAdventure:
             elif current_colour == main.colours[3]:
                 main.game.place_forget()
                 yellow_cards = [
-                    main.card_green_31_frame,
-                    main.card_green_32_frame,
-                    main.card_green_33_frame,
-                    main.card_green_34_frame,
-                    main.card_green_35_frame,
-                    main.card_green_36_frame,
-                    main.card_green_37_frame,
-                    main.card_green_38_frame,
-                    main.card_green_39_frame,
-                    main.card_green_40_frame
+                    main.card_yellow_31_frame,
+                    main.card_yellow_32_frame,
+                    main.card_yellow_33_frame,
+                    main.card_yellow_34_frame,
+                    main.card_yellow_35_frame,
+                    main.card_yellow_36_frame,
+                    main.card_yellow_37_frame,
+                    main.card_yellow_38_frame,
+                    main.card_yellow_39_frame,
+                    main.card_yellow_40_frame
                 ]
                 main.card = r.choice(yellow_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
@@ -159,7 +148,7 @@ class SeedAdventure:
                     main.card_purple_59_frame,
                     main.card_purple_60_frame
                 ]
-                main.card = r.choice(green_cards)
+                main.card = r.choice(purple_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
             elif current_colour == main.colours[6]:
                 main.game.place_forget()
@@ -217,7 +206,7 @@ class SeedAdventure:
             def continue_blue_8():
                 main.card_blue_8_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_blue_9():
                 main.card_blue_9_frame.place_forget()
@@ -227,7 +216,7 @@ class SeedAdventure:
             def continue_blue_10():
                 main.card_blue_10_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_red_11():
                 main.card_red_11_frame.place_forget()
@@ -252,7 +241,7 @@ class SeedAdventure:
             def continue_red_15():
                 main.card_red_15_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"b")
+                main.move_f_or_b(3,"b")
 
             def continue_red_16():
                 main.card_red_16_frame.place_forget()
@@ -302,7 +291,7 @@ class SeedAdventure:
             def continue_green_25():
                 main.card_green_25_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_green_26():
                 main.card_green_26_frame.place_forget()
@@ -327,7 +316,7 @@ class SeedAdventure:
             def continue_green_30():
                 main.card_green_30_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_yellow_31():
                 main.card_yellow_31_frame.place_forget()
@@ -347,7 +336,7 @@ class SeedAdventure:
             def continue_yellow_34():
                 main.card_yellow_34_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_yellow_35():
                 main.card_yellow_35_frame.place_forget()
@@ -367,7 +356,7 @@ class SeedAdventure:
             def continue_yellow_38():
                 main.card_yellow_38_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_yellow_39():
                 main.card_yellow_39_frame.place_forget()
@@ -377,7 +366,7 @@ class SeedAdventure:
             def continue_yellow_40():
                 main.card_yellow_40_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"b")
+                main.move_f_or_b(3,"b")
 
             def continue_brown_41():
                 main.card_brown_41_frame.place_forget()
@@ -397,7 +386,7 @@ class SeedAdventure:
             def continue_brown_44():
                 main.card_brown_44_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_brown_45():
                 main.card_brown_45_frame.place_forget()
@@ -417,7 +406,7 @@ class SeedAdventure:
             def continue_brown_48():
                 main.card_brown_48_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_brown_49():
                 main.card_brown_49_frame.place_forget()
@@ -427,7 +416,7 @@ class SeedAdventure:
             def continue_brown_50():
                 main.card_brown_50_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_purple_51():
                 main.card_purple_51_frame.place_forget()
@@ -447,7 +436,7 @@ class SeedAdventure:
             def continue_purple_54():
                 main.card_purple_54_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_purple_55():
                 main.card_purple_55_frame.place_forget()
@@ -467,7 +456,7 @@ class SeedAdventure:
             def continue_purple_58():
                 main.card_purple_58_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_purple_59():
                 main.card_purple_59_frame.place_forget()
@@ -477,7 +466,7 @@ class SeedAdventure:
             def continue_purple_60():
                 main.card_purple_60_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"b")
+                main.move_f_or_b(3,"b")
 
             def continue_orange_61():
                 main.card_orange_61_frame.place_forget()
@@ -497,7 +486,7 @@ class SeedAdventure:
             def continue_orange_64():
                 main.card_orange_64_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(4,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_orange_65():
                 main.card_orange_65_frame.place_forget()
@@ -517,7 +506,7 @@ class SeedAdventure:
             def continue_orange_68():
                 main.card_orange_68_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"f")
+                main.move_f_or_b(3,"f")
 
             def continue_orange_69():
                 main.card_orange_69_frame.place_forget()
@@ -527,7 +516,7 @@ class SeedAdventure:
             def continue_orange_70():
                 main.card_orange_70_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(6,"f")
+                main.move_f_or_b(3,"f")
 
             # Assigning command functions to all buttons
             main.card_blue_1_continue.config(command=continue_blue_1)
@@ -724,7 +713,7 @@ class SeedAdventure:
                                                 font=("Arial",16),
                                                 bg="white")
         main.card_blue_5_label_middle_down = tk.Label(main.card_blue_5_frame,
-                                                    text="Move forward 4 spaces.",
+                                                    text="Move forward 3 spaces.",
                                                     font=("Arial",14,"bold"),
                                                     bg="white",
                                                     fg="green")
@@ -778,7 +767,7 @@ class SeedAdventure:
         main.card_blue_10_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_blue_10_title=tk.Label(main.card_blue_10_frame,text="🌧 BLUE CARD",font=("Arial",20,"bold"),bg="white",fg="blue")
         main.card_blue_10_label_middle=tk.Label(main.card_blue_10_frame,text="You reach the perfect place to grow.",font=("Arial",16),bg="white")
-        main.card_blue_10_label_middle_down=tk.Label(main.card_blue_10_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_blue_10_label_middle_down=tk.Label(main.card_blue_10_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_blue_10_continue=tk.Button(main.card_blue_10_frame,text="Continue")
         main.card_blue_10_title.pack(pady=20)
         main.card_blue_10_label_middle.pack(pady=20)
@@ -808,7 +797,7 @@ class SeedAdventure:
         main.card_red_13_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_13_title=tk.Label(main.card_red_13_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_13_label_middle=tk.Label(main.card_red_13_frame,text="An elephant drops your seed far away.",font=("Arial",16),bg="white")
-        main.card_red_13_label_middle_down=tk.Label(main.card_red_13_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_red_13_label_middle_down=tk.Label(main.card_red_13_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_red_13_continue=tk.Button(main.card_red_13_frame,text="Continue")
         main.card_red_13_title.pack(pady=20)
         main.card_red_13_label_middle.pack(pady=20)
@@ -858,7 +847,7 @@ class SeedAdventure:
         main.card_red_18_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_18_title=tk.Label(main.card_red_18_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_18_label_middle=tk.Label(main.card_red_18_frame,text="A bird drops your seed in fertile soil.",font=("Arial",16),bg="white")
-        main.card_red_18_label_middle_down=tk.Label(main.card_red_18_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_red_18_label_middle_down=tk.Label(main.card_red_18_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_red_18_continue=tk.Button(main.card_red_18_frame,text="Continue")
         main.card_red_18_title.pack(pady=20)
         main.card_red_18_label_middle.pack(pady=20)
@@ -878,7 +867,7 @@ class SeedAdventure:
         main.card_red_20_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_20_title=tk.Label(main.card_red_20_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_20_label_middle=tk.Label(main.card_red_20_frame,text="A herd of animals spreads your seeds widely.",font=("Arial",16),bg="white")
-        main.card_red_20_label_middle_down=tk.Label(main.card_red_20_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_red_20_label_middle_down=tk.Label(main.card_red_20_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_red_20_continue=tk.Button(main.card_red_20_frame,text="Continue")
         main.card_red_20_title.pack(pady=20)
         main.card_red_20_label_middle.pack(pady=20)
@@ -908,7 +897,7 @@ class SeedAdventure:
         main.card_green_23_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_green_23_title=tk.Label(main.card_green_23_frame,text="🌿 GREEN CARD",font=("Arial",20,"bold"),bg="white",fg="green")
         main.card_green_23_label_middle=tk.Label(main.card_green_23_frame,text="A breeze lifts your seed over a hill.",font=("Arial",16),bg="white")
-        main.card_green_23_label_middle_down=tk.Label(main.card_green_23_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_green_23_label_middle_down=tk.Label(main.card_green_23_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_green_23_continue=tk.Button(main.card_green_23_frame,text="Continue")
         main.card_green_23_title.pack(pady=20)
         main.card_green_23_label_middle.pack(pady=20)
@@ -928,7 +917,7 @@ class SeedAdventure:
         main.card_green_25_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_green_25_title=tk.Label(main.card_green_25_frame,text="🌿 GREEN CARD",font=("Arial",20,"bold"),bg="white",fg="green")
         main.card_green_25_label_middle=tk.Label(main.card_green_25_frame,text="A gust sends your seed across a field.",font=("Arial",16),bg="white")
-        main.card_green_25_label_middle_down=tk.Label(main.card_green_25_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_green_25_label_middle_down=tk.Label(main.card_green_25_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_green_25_continue=tk.Button(main.card_green_25_frame,text="Continue")
         main.card_green_25_title.pack(pady=20)
         main.card_green_25_label_middle.pack(pady=20)
@@ -958,7 +947,7 @@ class SeedAdventure:
         main.card_green_28_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_green_28_title=tk.Label(main.card_green_28_frame,text="🌿 GREEN CARD",font=("Arial",20,"bold"),bg="white",fg="green")
         main.card_green_28_label_middle=tk.Label(main.card_green_28_frame,text="The wind carries you over a river.",font=("Arial",16),bg="white")
-        main.card_green_28_label_middle_down=tk.Label(main.card_green_28_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_green_28_label_middle_down=tk.Label(main.card_green_28_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_green_28_continue=tk.Button(main.card_green_28_frame,text="Continue")
         main.card_green_28_title.pack(pady=20)
         main.card_green_28_label_middle.pack(pady=20)
@@ -978,7 +967,7 @@ class SeedAdventure:
         main.card_green_30_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_green_30_title=tk.Label(main.card_green_30_frame,text="🌿 GREEN CARD",font=("Arial",20,"bold"),bg="white",fg="green")
         main.card_green_30_label_middle=tk.Label(main.card_green_30_frame,text="The wind spreads your seeds perfectly.",font=("Arial",16),bg="white")
-        main.card_green_30_label_middle_down=tk.Label(main.card_green_30_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_green_30_label_middle_down=tk.Label(main.card_green_30_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_green_30_continue=tk.Button(main.card_green_30_frame,text="Continue")
         main.card_green_30_title.pack(pady=20)
         main.card_green_30_label_middle.pack(pady=20)
@@ -998,7 +987,7 @@ class SeedAdventure:
         main.card_yellow_32_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_yellow_32_title=tk.Label(main.card_yellow_32_frame,text="💥 YELLOW CARD",font=("Arial",20,"bold"),bg="white",fg="goldenrod")
         main.card_yellow_32_label_middle=tk.Label(main.card_yellow_32_frame,text="The seed pod explodes with a pop!",font=("Arial",16),bg="white")
-        main.card_yellow_32_label_middle_down=tk.Label(main.card_yellow_32_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_yellow_32_label_middle_down=tk.Label(main.card_yellow_32_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_yellow_32_continue=tk.Button(main.card_yellow_32_frame,text="Continue")
         main.card_yellow_32_title.pack(pady=20)
         main.card_yellow_32_label_middle.pack(pady=20)
@@ -1028,7 +1017,7 @@ class SeedAdventure:
         main.card_yellow_35_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_yellow_35_title=tk.Label(main.card_yellow_35_frame,text="💥 YELLOW CARD",font=("Arial",20,"bold"),bg="white",fg="goldenrod")
         main.card_yellow_35_label_middle=tk.Label(main.card_yellow_35_frame,text="Your seeds scatter in every direction.",font=("Arial",16),bg="white")
-        main.card_yellow_35_label_middle_down=tk.Label(main.card_yellow_35_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_yellow_35_label_middle_down=tk.Label(main.card_yellow_35_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_yellow_35_continue=tk.Button(main.card_yellow_35_frame,text="Continue")
         main.card_yellow_35_title.pack(pady=20)
         main.card_yellow_35_label_middle.pack(pady=20)
@@ -1058,7 +1047,7 @@ class SeedAdventure:
         main.card_yellow_38_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_yellow_38_title=tk.Label(main.card_yellow_38_frame,text="💥 YELLOW CARD",font=("Arial",20,"bold"),bg="white",fg="goldenrod")
         main.card_yellow_38_label_middle=tk.Label(main.card_yellow_38_frame,text="Your seeds land in open ground.",font=("Arial",16),bg="white")
-        main.card_yellow_38_label_middle_down=tk.Label(main.card_yellow_38_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_yellow_38_label_middle_down=tk.Label(main.card_yellow_38_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_yellow_38_continue=tk.Button(main.card_yellow_38_frame,text="Continue")
         main.card_yellow_38_title.pack(pady=20)
         main.card_yellow_38_label_middle.pack(pady=20)
@@ -1078,7 +1067,7 @@ class SeedAdventure:
         main.card_yellow_40_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_yellow_40_title=tk.Label(main.card_yellow_40_frame,text="💥 YELLOW CARD",font=("Arial",20,"bold"),bg="white",fg="goldenrod")
         main.card_yellow_40_label_middle=tk.Label(main.card_yellow_40_frame,text="Perfect explosion! Seeds spread everywhere.",font=("Arial",16),bg="white")
-        main.card_yellow_40_label_middle_down=tk.Label(main.card_yellow_40_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_yellow_40_label_middle_down=tk.Label(main.card_yellow_40_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_yellow_40_continue=tk.Button(main.card_yellow_40_frame,text="Continue")
         main.card_yellow_40_title.pack(pady=20)
         main.card_yellow_40_label_middle.pack(pady=20)
@@ -1098,7 +1087,7 @@ class SeedAdventure:
         main.card_brown_42_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_brown_42_title=tk.Label(main.card_brown_42_frame,text="🟤 BROWN CARD",font=("Arial",20,"bold"),bg="white",fg="brown")
         main.card_brown_42_label_middle=tk.Label(main.card_brown_42_frame,text="A bird drops your seed far away.",font=("Arial",16),bg="white")
-        main.card_brown_42_label_middle_down=tk.Label(main.card_brown_42_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_brown_42_label_middle_down=tk.Label(main.card_brown_42_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_brown_42_continue=tk.Button(main.card_brown_42_frame,text="Continue")
         main.card_brown_42_title.pack(pady=20)
         main.card_brown_42_label_middle.pack(pady=20)
@@ -1118,7 +1107,7 @@ class SeedAdventure:
         main.card_brown_44_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_brown_44_title=tk.Label(main.card_brown_44_frame,text="🟤 BROWN CARD",font=("Arial",20,"bold"),bg="white",fg="brown")
         main.card_brown_44_label_middle=tk.Label(main.card_brown_44_frame,text="A monkey carries your fruit away.",font=("Arial",16),bg="white")
-        main.card_brown_44_label_middle_down=tk.Label(main.card_brown_44_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_brown_44_label_middle_down=tk.Label(main.card_brown_44_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_brown_44_continue=tk.Button(main.card_brown_44_frame,text="Continue")
         main.card_brown_44_title.pack(pady=20)
         main.card_brown_44_label_middle.pack(pady=20)
@@ -1128,7 +1117,7 @@ class SeedAdventure:
         main.card_brown_45_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_brown_45_title=tk.Label(main.card_brown_45_frame,text="🟤 BROWN CARD",font=("Arial",20,"bold"),bg="white",fg="brown")
         main.card_brown_45_label_middle=tk.Label(main.card_brown_45_frame,text="An elephant drops your seed in rich soil.",font=("Arial",16),bg="white")
-        main.card_brown_45_label_middle_down=tk.Label(main.card_brown_45_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_brown_45_label_middle_down=tk.Label(main.card_brown_45_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_brown_45_continue=tk.Button(main.card_brown_45_frame,text="Continue")
         main.card_brown_45_title.pack(pady=20)
         main.card_brown_45_label_middle.pack(pady=20)
@@ -1158,7 +1147,7 @@ class SeedAdventure:
         main.card_brown_48_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_brown_48_title=tk.Label(main.card_brown_48_frame,text="🟤 BROWN CARD",font=("Arial",20,"bold"),bg="white",fg="brown")
         main.card_brown_48_label_middle=tk.Label(main.card_brown_48_frame,text="A fox carries your seed to a new place.",font=("Arial",16),bg="white")
-        main.card_brown_48_label_middle_down=tk.Label(main.card_brown_48_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_brown_48_label_middle_down=tk.Label(main.card_brown_48_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_brown_48_continue=tk.Button(main.card_brown_48_frame,text="Continue")
         main.card_brown_48_title.pack(pady=20)
         main.card_brown_48_label_middle.pack(pady=20)
@@ -1168,7 +1157,7 @@ class SeedAdventure:
         main.card_brown_49_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_brown_49_title=tk.Label(main.card_brown_49_frame,text="🟤 BROWN CARD",font=("Arial",20,"bold"),bg="white",fg="brown")
         main.card_brown_49_label_middle=tk.Label(main.card_brown_49_frame,text="A bird eats the fruit and drops the seed.",font=("Arial",16),bg="white")
-        main.card_brown_49_label_middle_down=tk.Label(main.card_brown_49_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_brown_49_label_middle_down=tk.Label(main.card_brown_49_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_brown_49_continue=tk.Button(main.card_brown_49_frame,text="Continue")
         main.card_brown_49_title.pack(pady=20)
         main.card_brown_49_label_middle.pack(pady=20)
@@ -1178,7 +1167,7 @@ class SeedAdventure:
         main.card_brown_50_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_brown_50_title=tk.Label(main.card_brown_50_frame,text="🟤 BROWN CARD",font=("Arial",20,"bold"),bg="white",fg="brown")
         main.card_brown_50_label_middle=tk.Label(main.card_brown_50_frame,text="An animal helps your seed find a perfect home.",font=("Arial",16),bg="white")
-        main.card_brown_50_label_middle_down=tk.Label(main.card_brown_50_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_brown_50_label_middle_down=tk.Label(main.card_brown_50_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_brown_50_continue=tk.Button(main.card_brown_50_frame,text="Continue")
         main.card_brown_50_title.pack(pady=20)
         main.card_brown_50_label_middle.pack(pady=20)
@@ -1208,7 +1197,7 @@ class SeedAdventure:
         main.card_purple_53_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_purple_53_title=tk.Label(main.card_purple_53_frame,text="🟣 PURPLE CARD",font=("Arial",20,"bold"),bg="white",fg="purple")
         main.card_purple_53_label_middle=tk.Label(main.card_purple_53_frame,text="Your roots grow deep into the soil.",font=("Arial",16),bg="white")
-        main.card_purple_53_label_middle_down=tk.Label(main.card_purple_53_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_purple_53_label_middle_down=tk.Label(main.card_purple_53_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_purple_53_continue=tk.Button(main.card_purple_53_frame,text="Continue")
         main.card_purple_53_title.pack(pady=20)
         main.card_purple_53_label_middle.pack(pady=20)
@@ -1228,7 +1217,7 @@ class SeedAdventure:
         main.card_purple_55_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_purple_55_title=tk.Label(main.card_purple_55_frame,text="🟣 PURPLE CARD",font=("Arial",20,"bold"),bg="white",fg="purple")
         main.card_purple_55_label_middle=tk.Label(main.card_purple_55_frame,text="You bloom into a beautiful flowering plant.",font=("Arial",16),bg="white")
-        main.card_purple_55_label_middle_down=tk.Label(main.card_purple_55_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_purple_55_label_middle_down=tk.Label(main.card_purple_55_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_purple_55_continue=tk.Button(main.card_purple_55_frame,text="Continue")
         main.card_purple_55_title.pack(pady=20)
         main.card_purple_55_label_middle.pack(pady=20)
@@ -1258,7 +1247,7 @@ class SeedAdventure:
         main.card_purple_58_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_purple_58_title=tk.Label(main.card_purple_58_frame,text="🟣 PURPLE CARD",font=("Arial",20,"bold"),bg="white",fg="purple")
         main.card_purple_58_label_middle=tk.Label(main.card_purple_58_frame,text="Your flowers attract helpful bees.",font=("Arial",16),bg="white")
-        main.card_purple_58_label_middle_down=tk.Label(main.card_purple_58_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_purple_58_label_middle_down=tk.Label(main.card_purple_58_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_purple_58_continue=tk.Button(main.card_purple_58_frame,text="Continue")
         main.card_purple_58_title.pack(pady=20)
         main.card_purple_58_label_middle.pack(pady=20)
@@ -1278,7 +1267,7 @@ class SeedAdventure:
         main.card_purple_60_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_purple_60_title=tk.Label(main.card_purple_60_frame,text="🟣 PURPLE CARD",font=("Arial",20,"bold"),bg="white",fg="purple")
         main.card_purple_60_label_middle=tk.Label(main.card_purple_60_frame,text="Congratulations! Your plant produces new seeds.",font=("Arial",16),bg="white")
-        main.card_purple_60_label_middle_down=tk.Label(main.card_purple_60_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_purple_60_label_middle_down=tk.Label(main.card_purple_60_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_purple_60_continue=tk.Button(main.card_purple_60_frame,text="Continue")
         main.card_purple_60_title.pack(pady=20)
         main.card_purple_60_label_middle.pack(pady=20)
@@ -1308,7 +1297,7 @@ class SeedAdventure:
         main.card_orange_63_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_orange_63_title=tk.Label(main.card_orange_63_frame,text="🟠 ORANGE CARD",font=("Arial",20,"bold"),bg="white",fg="orange")
         main.card_orange_63_label_middle=tk.Label(main.card_orange_63_frame,text="Your tree becomes full of healthy fruits.",font=("Arial",16),bg="white")
-        main.card_orange_63_label_middle_down=tk.Label(main.card_orange_63_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_orange_63_label_middle_down=tk.Label(main.card_orange_63_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_orange_63_continue=tk.Button(main.card_orange_63_frame,text="Continue")
         main.card_orange_63_title.pack(pady=20)
         main.card_orange_63_label_middle.pack(pady=20)
@@ -1318,7 +1307,7 @@ class SeedAdventure:
         main.card_orange_64_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_orange_64_title=tk.Label(main.card_orange_64_frame,text="🟠 ORANGE CARD",font=("Arial",20,"bold"),bg="white",fg="orange")
         main.card_orange_64_label_middle=tk.Label(main.card_orange_64_frame,text="Many animals spread your seeds.",font=("Arial",16),bg="white")
-        main.card_orange_64_label_middle_down=tk.Label(main.card_orange_64_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_orange_64_label_middle_down=tk.Label(main.card_orange_64_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_orange_64_continue=tk.Button(main.card_orange_64_frame,text="Continue")
         main.card_orange_64_title.pack(pady=20)
         main.card_orange_64_label_middle.pack(pady=20)
@@ -1358,7 +1347,7 @@ class SeedAdventure:
         main.card_orange_68_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_orange_68_title=tk.Label(main.card_orange_68_frame,text="🟠 ORANGE CARD",font=("Arial",20,"bold"),bg="white",fg="orange")
         main.card_orange_68_label_middle=tk.Label(main.card_orange_68_frame,text="A perfect season helps every seed grow.",font=("Arial",16),bg="white")
-        main.card_orange_68_label_middle_down=tk.Label(main.card_orange_68_frame,text="Move forward 4 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_orange_68_label_middle_down=tk.Label(main.card_orange_68_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_orange_68_continue=tk.Button(main.card_orange_68_frame,text="Continue")
         main.card_orange_68_title.pack(pady=20)
         main.card_orange_68_label_middle.pack(pady=20)
@@ -1368,7 +1357,7 @@ class SeedAdventure:
         main.card_orange_69_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_orange_69_title=tk.Label(main.card_orange_69_frame,text="🟠 ORANGE CARD",font=("Arial",20,"bold"),bg="white",fg="orange")
         main.card_orange_69_label_middle=tk.Label(main.card_orange_69_frame,text="Nature celebrates your success!",font=("Arial",16),bg="white")
-        main.card_orange_69_label_middle_down=tk.Label(main.card_orange_69_frame,text="Move forward 5 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
+        main.card_orange_69_label_middle_down=tk.Label(main.card_orange_69_frame,text="Move forward 3 spaces.",font=("Arial",14,"bold"),bg="white",fg="green")
         main.card_orange_69_continue=tk.Button(main.card_orange_69_frame,text="Continue")
         main.card_orange_69_title.pack(pady=20)
         main.card_orange_69_label_middle.pack(pady=20)
@@ -1388,6 +1377,20 @@ class SeedAdventure:
         main.rolldicebutton.place(x=10, y=10)
         main.player_position = 0
         main.player = main.canvas_for_game.create_oval(135, 185, 165, 215,fill="#402c03",outline="black",width=2)
+    def __init__(main, root):
+        main.root = root
+
+    def show_menu(main):
+        main.menu = tk.Frame(main.root)
+        main.menu.place(relx=0, rely=0, relheight=1, relwidth=1)
+        main.title = tk.Label(main.root, text="Journey of a Seed", font=("Segoe UI", 30, "bold"))
+        main.title.place(relx=0.5,rely=0.2,anchor="center")
+        main.play_button = tk.Button(main.root, text = "Play the game!", font=("Segoe UI", 25, "bold"),command=main.frame_new_plus_board_game)
+        main.play_button.place(relx=0.5,rely=0.3,anchor="center")
+    def forget_menu_frame(main):
+        main.menu.place_forget()
+
+
 
         
 window=tk.Tk()
@@ -1395,5 +1398,5 @@ game=SeedAdventure(window)
 window.geometry("1000x1000")
 window.title("Journey of a seed game")
 window.resizable(False, False)
-game.frame_new_plus_board_game()
+game.show_menu()
 window.mainloop()

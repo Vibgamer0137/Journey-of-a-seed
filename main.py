@@ -4,14 +4,6 @@ import random as r
 class SeedAdventure:
     def __init__(main, root):
         main.root = root
-
-    def show_menu(main):
-        main.menu = tk.Frame(main.root)
-        main.menu.place(relx=0, rely=0, relheight=1, relwidth=1)
-
-    def forget_menu_frame(main):
-        main.menu.place_forget()
-
     def move_f_or_b(main, how_much_to_move, f_or_b):
         if f_or_b == "f":
             main.player_position += how_much_to_move
@@ -31,7 +23,6 @@ class SeedAdventure:
         
         # Moves the player token oval on the canvas
         main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
-
     def frame_new_plus_board_game(main):
         main.game = tk.Frame(main.root)
         main.game.place(relx=0, rely=0, relheight=1, relwidth=1)
@@ -53,7 +44,7 @@ class SeedAdventure:
 
         def rolldicebuttoncommand():
             dice = r.randint(1, 3)
-            rolleddicebuttonlabel = tk.Label(main.root, text=dice)
+            rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17))
             rolleddicebuttonlabel.place(x=10, y=30)
             main.player_position += dice
             if main.player_position > 63:
@@ -1388,6 +1379,18 @@ class SeedAdventure:
         main.rolldicebutton.place(x=10, y=10)
         main.player_position = 0
         main.player = main.canvas_for_game.create_oval(135, 185, 165, 215,fill="#402c03",outline="black",width=2)
+    def forget_menu_frame(main):
+        main.menu.place_forget()
+    def play_button(main):
+        main.forget_menu_frame()
+        main.frame_new_plus_board_game()
+    def show_menu(main):
+        main.menu = tk.Frame(main.root)
+        main.menu.place(relx=0, rely=0, relheight=1, relwidth=1)
+        main.title = tk.Label(main.root, text="Journey of a Seed", font=("Segoe UI", 30, "bold"))
+        main.title.place(relx=0.5,rely=0.2,anchor="center")
+        main.play_button = tk.Button(main.root, text = "Play the game!", font=("Segoe UI", 25, "bold"),command=main.play_button)
+        main.play_button.place(relx=0.5,rely=0.3,anchor="center")
 
         
 window=tk.Tk()
@@ -1395,5 +1398,5 @@ game=SeedAdventure(window)
 window.geometry("1000x1000")
 window.title("Journey of a seed game")
 window.resizable(False, False)
-game.frame_new_plus_board_game()
+game.show_menu()
 window.mainloop()
