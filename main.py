@@ -2,6 +2,7 @@ import tkinter as tk
 import random as r
 import winsound as w
 import time as t
+import os as o
 class SeedAdventure:
     def __init__(main, root):
         main.root = root
@@ -25,6 +26,8 @@ class SeedAdventure:
         # Moves the player token oval on the canvas
         main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
     def frame_new_plus_board_game(main):
+        DICE_SOUND = o.path.join("Assets","Sounds","Wav","dice_sound.wav")
+        CARD_SOUND = o.path.join("Assets","Sounds","Wav","Card_pop.sound.wav")
         main.game = tk.Frame(main.root)
         main.game.place(relx=0, rely=0, relheight=1, relwidth=1)
         main.tiles = []
@@ -44,7 +47,7 @@ class SeedAdventure:
             y += 100
 
         def rolldicebuttoncommand():
-            w.PlaySound("dice_sound.wav", w.SND_FILENAME | w.SND_ASYNC)
+            w.PlaySound(DICE_SOUND, w.SND_FILENAME | w.SND_ASYNC)
             t.sleep(1)
             dice = r.randint(1, 3)
             rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17),bg="black",fg="white")
@@ -184,7 +187,7 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(orange_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place_forget(x=10,y=65)
+                rolleddicebuttonlabel.place(x=10,y=65)
             else:
                 print("Error code:5500")
             def continue_blue_1():
