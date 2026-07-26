@@ -1,6 +1,7 @@
 import tkinter as tk
 import random as r
-
+import winsound as w
+import time as t
 class SeedAdventure:
     def __init__(main, root):
         main.root = root
@@ -43,9 +44,11 @@ class SeedAdventure:
             y += 100
 
         def rolldicebuttoncommand():
+            w.PlaySound("dice_sound.wav", w.SND_FILENAME | w.SND_ASYNC)
+            t.sleep(1)
             dice = r.randint(1, 3)
-            rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17))
-            rolleddicebuttonlabel.place(x=10, y=30)
+            rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17),bg="black",fg="white")
+            rolleddicebuttonlabel.place(x=10, y=65)
             main.player_position += dice
             if main.player_position > 63:
                 main.player_position = 63
@@ -57,6 +60,7 @@ class SeedAdventure:
             main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
             current_colour = main.colours_for_tiles[main.player_position]
             if current_colour == main.colours[0]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 blue_cards = [
                     main.card_blue_1_frame,
@@ -72,7 +76,9 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(blue_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place(x=10,y=65)
             elif current_colour == main.colours[1]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 red_cards = [
                     main.card_red_11_frame,
@@ -88,7 +94,9 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(red_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place(x=10,y=65)
             elif current_colour == main.colours[2]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 green_cards = [
                     main.card_green_21_frame,
@@ -104,7 +112,9 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(green_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place()
             elif current_colour == main.colours[3]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 yellow_cards = [
                     main.card_yellow_31_frame,
@@ -120,7 +130,9 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(yellow_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place(x=10,y=65)
             elif current_colour == main.colours[4]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 brown_cards = [
                     main.card_brown_41_frame,
@@ -136,7 +148,9 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(brown_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place(x=10,y=65)
             elif current_colour == main.colours[5]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 purple_cards = [
                     main.card_purple_51_frame,
@@ -152,7 +166,9 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(purple_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place(x=10,y=65)
             elif current_colour == main.colours[6]:
+                rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
                 orange_cards = [
                     main.card_orange_61_frame,
@@ -168,6 +184,7 @@ class SeedAdventure:
                 ]
                 main.card = r.choice(orange_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                rolleddicebuttonlabel.place_forget(x=10,y=65)
             else:
                 print("Error code:5500")
             def continue_blue_1():
@@ -518,7 +535,7 @@ class SeedAdventure:
             def continue_orange_70():
                 main.card_orange_70_frame.place_forget()
                 main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
+                main.move_f_or_b(2,"f")
 
             # Assigning command functions to all buttons
             main.card_blue_1_continue.config(command=continue_blue_1)
@@ -1368,28 +1385,28 @@ class SeedAdventure:
 
         main.card_orange_70_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_orange_70_title=tk.Label(main.card_orange_70_frame,text="🟠 ORANGE CARD",font=("Arial",20,"bold"),bg="white",fg="orange")
-        main.card_orange_70_label_middle=tk.Label(main.card_orange_70_frame,text="🏆 You completed the Journey of a Seed!",font=("Arial",16),bg="white")
-        main.card_orange_70_label_middle_down=tk.Label(main.card_orange_70_frame,text="You Win!",font=("Arial",14,"bold"),bg="white",fg="blue")
+        main.card_orange_70_label_middle=tk.Label(main.card_orange_70_frame,text="You got watered(Bonus Card)",font=("Arial",16),bg="white")
+        main.card_orange_70_label_middle_down=tk.Label(main.card_orange_70_frame,text="You move 2 spaces",font=("Arial",14,"bold"),bg="white",fg="blue")
         main.card_orange_70_continue=tk.Button(main.card_orange_70_frame,text="Finish")
         main.card_orange_70_title.pack(pady=20)
         main.card_orange_70_label_middle.pack(pady=20)
         main.card_orange_70_label_middle_down.pack(pady=20)
-        main.card_orange_70_continue.pack(side="bottom",pady=20)
-        main.rolldicebutton = tk.Button(main.canvas_for_game,command=rolldicebuttoncommand,text="Roll Dice")
+        main.card_orange_70_continue.pack(side="bottom", pady=20)
+        main.rolldicebutton = tk.Button(main.canvas_for_game,command=rolldicebuttoncommand,text="Roll Dice", font=("Arial",20),bg="black",fg="white",activebackground="black",activeforeground="white")
         main.rolldicebutton.place(x=10, y=10)
         main.player_position = 0
         main.player = main.canvas_for_game.create_oval(135, 185, 165, 215,fill="#402c03",outline="black",width=2)
     def forget_menu_frame(main):
-        main.menu.place_forget()
-    def play_button(main):
+        main.menu.destroy()
+    def start_game(main):
         main.forget_menu_frame()
         main.frame_new_plus_board_game()
     def show_menu(main):
         main.menu = tk.Frame(main.root)
         main.menu.place(relx=0, rely=0, relheight=1, relwidth=1)
-        main.title = tk.Label(main.root, text="Journey of a Seed", font=("Segoe UI", 30, "bold"))
+        main.title = tk.Label(main.menu, text="Journey of a Seed", font=("Segoe UI", 30, "bold"))
         main.title.place(relx=0.5,rely=0.2,anchor="center")
-        main.play_button = tk.Button(main.root, text = "Play the game!", font=("Segoe UI", 25, "bold"),command=main.play_button)
+        main.play_button = tk.Button(main.menu, text = "Play the game!", font=("Segoe UI", 25, "bold"),command = main.start_game)
         main.play_button.place(relx=0.5,rely=0.3,anchor="center")
 
         
