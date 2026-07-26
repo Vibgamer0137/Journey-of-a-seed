@@ -27,7 +27,7 @@ class SeedAdventure:
         main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
     def frame_new_plus_board_game(main):
         DICE_SOUND = o.path.join("Assets","Sounds","Wav","dice_sound.wav")
-        CARD_SOUND = o.path.join("Assets","Sounds","Wav","Card_pop.sound.wav")
+        CARD_SOUND = o.path.join("Assets","Sounds","Wav","Card_pop_sound.wav")
         main.game = tk.Frame(main.root)
         main.game.place(relx=0, rely=0, relheight=1, relwidth=1)
         main.tiles = []
@@ -77,6 +77,7 @@ class SeedAdventure:
                     main.card_blue_9_frame,
                     main.card_blue_10_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(blue_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -95,6 +96,7 @@ class SeedAdventure:
                     main.card_red_19_frame,
                     main.card_red_20_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(red_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -113,6 +115,7 @@ class SeedAdventure:
                     main.card_green_29_frame,
                     main.card_green_30_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(green_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place()
@@ -131,6 +134,7 @@ class SeedAdventure:
                     main.card_yellow_39_frame,
                     main.card_yellow_40_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(yellow_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -149,6 +153,7 @@ class SeedAdventure:
                     main.card_brown_49_frame,
                     main.card_brown_50_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(brown_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -167,6 +172,7 @@ class SeedAdventure:
                     main.card_purple_59_frame,
                     main.card_purple_60_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(purple_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -185,6 +191,7 @@ class SeedAdventure:
                     main.card_orange_69_frame,
                     main.card_orange_70_frame
                 ]
+                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
                 main.card = r.choice(orange_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
