@@ -6,12 +6,82 @@ import os as o
 class SeedAdventure:
     def __init__(main, root):
         main.root = root
+        main.player_position = 0
+    def check_win(main):
+        if main.player_position >= 67:
+            main.show_win_screen()
+            return 
+        else:
+            main.root.after(100, main.check_win)  # Check again in 100 ms
+    def show_win_screen(main):
+        w.PlaySound("", w.SND_FILENAME | w.SND_ASYNC)
+        main.tree_image = tk.PhotoImage(file="C:\\Users\\Sai Varun\\Journey of a seed\\Assets\\Images\\Supported types\\tree.png")
+        # Stop background sound (optional)
+        # winsound.PlaySound(None, 0)
+
+        # Win frame
+        main.win_frame = tk.Frame(main.root, bg="#c8f7c5")
+        main.win_frame.place(relwidth=1, relheight=1,relx=0,rely=0)
+
+        # Title
+        tk.Label(
+            main.win_frame,
+            text="🏆 YOU WIN! 🏆",
+            font=("Segoe UI", 30, "bold"),
+            bg="#c8f7c5",
+            fg="darkgreen"
+        ).pack(pady=20)
+
+        # Tree Image
+
+        tk.Label(
+            main.win_frame,
+            image=main.tree_image,
+            bg="#c8f7c5"
+        ).pack()
+
+        # Congratulations
+        tk.Label(
+            main.win_frame,
+            text="Congratulations!\n"
+                "You successfully guided the seed\n"
+                "through its amazing journey.\n\n"
+                "The seed has now grown into\na beautiful tree! 🌳",
+            font=("Segoe UI", 18),
+            bg="#c8f7c5",
+            justify="center"
+        ).pack(pady=20)
+
+        # Play Again Button
+        tk.Button(
+            main.win_frame,
+            text="🔄 Play Again",
+            font=("Segoe UI", 18, "bold"),
+            bg="black",
+            fg="white",
+            activebackground="gray20",
+            activeforeground="white",
+            command=main.show_menu
+        ).pack(pady=10)
+
+        # Exit Button
+        tk.Button(
+            main.win_frame,
+            text="❌ Exit",
+            font=("Segoe UI", 16),
+            bg="darkred",
+            fg="white",
+            command=main.root.destroy
+        ).pack(pady=5)
     def move_f_or_b(main, how_much_to_move, f_or_b):
+        print("=" * 30)
+        print("move_f_or_b called")
+        print("Position before:", main.player_position)
+        print("Move:", how_much_to_move, f_or_b)
         if f_or_b == "f":
             main.player_position += how_much_to_move
         elif f_or_b == "b":
             main.player_position -= how_much_to_move
-
         if main.player_position < 0:
             main.player_position = 0
         if main.player_position > 63:
@@ -25,7 +95,9 @@ class SeedAdventure:
         
         # Moves the player token oval on the canvas
         main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
+        print("CONTINUE BLUE 1")
     def frame_new_plus_board_game(main):
+        main.check_win()
         DICE_SOUND = o.path.join("Assets","Sounds","Wav","dice_sound.wav")
         CARD_SOUND = o.path.join("Assets","Sounds","Wav","Card_pop_sound.wav")
         main.game = tk.Frame(main.root)
@@ -48,7 +120,7 @@ class SeedAdventure:
 
         def rolldicebuttoncommand():
             w.PlaySound(DICE_SOUND, w.SND_FILENAME | w.SND_ASYNC)
-            t.sleep(1)
+            main.root.after(700)
             dice = r.randint(1, 3)
             rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17),bg="black",fg="white")
             rolleddicebuttonlabel.place(x=10, y=65)
@@ -62,6 +134,7 @@ class SeedAdventure:
             y = 150 + row * 100 + 35
             main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
             current_colour = main.colours_for_tiles[main.player_position]
+            main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
             if current_colour == main.colours[0]:
                 rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
@@ -77,7 +150,7 @@ class SeedAdventure:
                     main.card_blue_9_frame,
                     main.card_blue_10_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(blue_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -96,7 +169,7 @@ class SeedAdventure:
                     main.card_red_19_frame,
                     main.card_red_20_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(red_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -115,7 +188,7 @@ class SeedAdventure:
                     main.card_green_29_frame,
                     main.card_green_30_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(green_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place()
@@ -134,7 +207,7 @@ class SeedAdventure:
                     main.card_yellow_39_frame,
                     main.card_yellow_40_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(yellow_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -153,7 +226,7 @@ class SeedAdventure:
                     main.card_brown_49_frame,
                     main.card_brown_50_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(brown_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -172,7 +245,7 @@ class SeedAdventure:
                     main.card_purple_59_frame,
                     main.card_purple_60_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(purple_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -191,441 +264,302 @@ class SeedAdventure:
                     main.card_orange_69_frame,
                     main.card_orange_70_frame
                 ]
-                w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(orange_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
             else:
                 print("Error code:5500")
-            def continue_blue_1():
-                main.card_blue_1_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_blue_2():
-                main.card_blue_2_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_blue_3():
-                main.card_blue_3_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_blue_4():
-                main.card_blue_4_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_blue_5():
-                main.card_blue_5_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_blue_6():
-                main.card_blue_6_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_blue_7():
-                main.card_blue_7_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_blue_8():
-                main.card_blue_8_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_blue_9():
-                main.card_blue_9_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_blue_10():
-                main.card_blue_10_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_red_11():
-                main.card_red_11_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_red_12():
-                main.card_red_12_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_red_13():
-                main.card_red_13_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_red_14():
-                main.card_red_14_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_red_15():
-                main.card_red_15_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_red_16():
-                main.card_red_16_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_red_17():
-                main.card_red_17_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_red_18():
-                main.card_red_18_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_red_19():
-                main.card_red_19_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_red_20():
-                main.card_red_20_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(5,"b")
-
-            def continue_green_21():
-                main.card_green_21_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_green_22():
-                main.card_green_22_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_green_23():
-                main.card_green_23_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_green_24():
-                main.card_green_24_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_green_25():
-                main.card_green_25_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_green_26():
-                main.card_green_26_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_green_27():
-                main.card_green_27_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_green_28():
-                main.card_green_28_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_green_29():
-                main.card_green_29_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_green_30():
-                main.card_green_30_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_yellow_31():
-                main.card_yellow_31_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_yellow_32():
-                main.card_yellow_32_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_yellow_33():
-                main.card_yellow_33_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_yellow_34():
-                main.card_yellow_34_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_yellow_35():
-                main.card_yellow_35_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_yellow_36():
-                main.card_yellow_36_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_yellow_37():
-                main.card_yellow_37_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_yellow_38():
-                main.card_yellow_38_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_yellow_39():
-                main.card_yellow_39_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_yellow_40():
-                main.card_yellow_40_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_brown_41():
-                main.card_brown_41_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_brown_42():
-                main.card_brown_42_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_brown_43():
-                main.card_brown_43_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_brown_44():
-                main.card_brown_44_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_brown_45():
-                main.card_brown_45_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_brown_46():
-                main.card_brown_46_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_brown_47():
-                main.card_brown_47_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_brown_48():
-                main.card_brown_48_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_brown_49():
-                main.card_brown_49_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_brown_50():
-                main.card_brown_50_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_purple_51():
-                main.card_purple_51_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_purple_52():
-                main.card_purple_52_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_purple_53():
-                main.card_purple_53_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_purple_54():
-                main.card_purple_54_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_purple_55():
-                main.card_purple_55_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_purple_56():
-                main.card_purple_56_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_purple_57():
-                main.card_purple_57_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_purple_58():
-                main.card_purple_58_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_purple_59():
-                main.card_purple_59_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_purple_60():
-                main.card_purple_60_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_orange_61():
-                main.card_orange_61_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_orange_62():
-                main.card_orange_62_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"b")
-
-            def continue_orange_63():
-                main.card_orange_63_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"f")
-
-            def continue_orange_64():
-                main.card_orange_64_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_orange_65():
-                main.card_orange_65_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"b")
-
-            def continue_orange_66():
-                main.card_orange_66_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_orange_67():
-                main.card_orange_67_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(1,"b")
-
-            def continue_orange_68():
-                main.card_orange_68_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(3,"f")
-
-            def continue_orange_69():
-                main.card_orange_69_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            def continue_orange_70():
-                main.card_orange_70_frame.place_forget()
-                main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-                main.move_f_or_b(2,"f")
-
-            # Assigning command functions to all buttons
-            main.card_blue_1_continue.config(command=continue_blue_1)
-            main.card_blue_2_continue.config(command=continue_blue_2)
-            main.card_blue_3_continue.config(command=continue_blue_3)
-            main.card_blue_4_continue.config(command=continue_blue_4)
-            main.card_blue_5_continue.config(command=continue_blue_5)
-            main.card_blue_6_continue.config(command=continue_blue_6)
-            main.card_blue_7_continue.config(command=continue_blue_7)
-            main.card_blue_8_continue.config(command=continue_blue_8)
-            main.card_blue_9_continue.config(command=continue_blue_9)
-            main.card_blue_10_continue.config(command=continue_blue_10)
-
-            main.card_red_11_continue.config(command=continue_red_11)
-            main.card_red_12_continue.config(command=continue_red_12)
-            main.card_red_13_continue.config(command=continue_red_13)
-            main.card_red_14_continue.config(command=continue_red_14)
-            main.card_red_15_continue.config(command=continue_red_15)
-            main.card_red_16_continue.config(command=continue_red_16)
-            main.card_red_17_continue.config(command=continue_red_17)
-            main.card_red_18_continue.config(command=continue_red_18)
-            main.card_red_19_continue.config(command=continue_red_19)
-            main.card_red_20_continue.config(command=continue_red_20)
-
-            main.card_green_21_continue.config(command=continue_green_21)
-            main.card_green_22_continue.config(command=continue_green_22)
-            main.card_green_23_continue.config(command=continue_green_23)
-            main.card_green_24_continue.config(command=continue_green_24)
-            main.card_green_25_continue.config(command=continue_green_25)
-            main.card_green_26_continue.config(command=continue_green_26)
-            main.card_green_27_continue.config(command=continue_green_27)
-            main.card_green_28_continue.config(command=continue_green_28)
-            main.card_green_29_continue.config(command=continue_green_29)
-            main.card_green_30_continue.config(command=continue_green_30)
-
-            main.card_yellow_31_continue.config(command=continue_yellow_31)
-            main.card_yellow_32_continue.config(command=continue_yellow_32)
-            main.card_yellow_33_continue.config(command=continue_yellow_33)
-            main.card_yellow_34_continue.config(command=continue_yellow_34)
-            main.card_yellow_35_continue.config(command=continue_yellow_35)
-            main.card_yellow_36_continue.config(command=continue_yellow_36)
-            main.card_yellow_37_continue.config(command=continue_yellow_37)
-            main.card_yellow_38_continue.config(command=continue_yellow_38)
-            main.card_yellow_39_continue.config(command=continue_yellow_39)
-            main.card_yellow_40_continue.config(command=continue_yellow_40)
-
-            main.card_brown_41_continue.config(command=continue_brown_41)
-            main.card_brown_42_continue.config(command=continue_brown_42)
-            main.card_brown_43_continue.config(command=continue_brown_43)
-            main.card_brown_44_continue.config(command=continue_brown_44)
-            main.card_brown_45_continue.config(command=continue_brown_45)
-            main.card_brown_46_continue.config(command=continue_brown_46)
-            main.card_brown_47_continue.config(command=continue_brown_47)
-            main.card_brown_48_continue.config(command=continue_brown_48)
-            main.card_brown_49_continue.config(command=continue_brown_49)
-            main.card_brown_50_continue.config(command=continue_brown_50)
-
-            main.card_purple_51_continue.config(command=continue_purple_51)
-            main.card_purple_52_continue.config(command=continue_purple_52)
-            main.card_purple_53_continue.config(command=continue_purple_53)
-            main.card_purple_54_continue.config(command=continue_purple_54)
-            main.card_purple_55_continue.config(command=continue_purple_55)
-            main.card_purple_56_continue.config(command=continue_purple_56)
-            main.card_purple_57_continue.config(command=continue_purple_57)
-            main.card_purple_58_continue.config(command=continue_purple_58)
-            main.card_purple_59_continue.config(command=continue_purple_59)
-            main.card_purple_60_continue.config(command=continue_purple_60)
-
-            main.card_orange_61_continue.config(command=continue_orange_61)
-            main.card_orange_62_continue.config(command=continue_orange_62)
-            main.card_orange_63_continue.config(command=continue_orange_63)
-            main.card_orange_64_continue.config(command=continue_orange_64)
-            main.card_orange_65_continue.config(command=continue_orange_65)
-            main.card_orange_66_continue.config(command=continue_orange_66)
-            main.card_orange_67_continue.config(command=continue_orange_67)
-            main.card_orange_68_continue.config(command=continue_orange_68)
-            main.card_orange_69_continue.config(command=continue_orange_69)
-            main.card_orange_70_continue.config(command=continue_orange_70)
-
-            main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
+        def continue_blue_1():
+            print("ROLL BUTTON PRESSED")
+            main.card_blue_1_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+            print("CONTINUE BLUE 1")
+
+        def continue_blue_2():
+            main.card_blue_2_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+
+        def continue_blue_3():
+            main.card_blue_3_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+
+        def continue_blue_4():
+            main.card_blue_4_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+
+        def continue_blue_5():
+            main.card_blue_5_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+
+        def continue_blue_6():
+            main.card_blue_6_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+
+        def continue_blue_7():
+            main.card_blue_7_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+
+        def continue_blue_8():
+            main.card_blue_8_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+
+        def continue_blue_9():
+            main.card_blue_9_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_blue_10():
+            main.card_blue_10_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_red_11():
+            main.card_red_11_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_red_12():
+            main.card_red_12_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_red_13():
+            main.card_red_13_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+        def continue_red_14():
+            main.card_red_14_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_red_15():
+            main.card_red_15_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_red_16():
+            main.card_red_16_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_red_17():
+            main.card_red_17_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+        def continue_red_18():
+            main.card_red_18_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_red_19():
+            main.card_red_19_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_red_20():
+            main.card_red_20_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(5,"b")
+        def continue_green_21():
+            main.card_green_21_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_green_22():
+            main.card_green_22_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+        def continue_green_23():
+            main.card_green_23_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_green_24():
+            main.card_green_24_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_green_25():
+            main.card_green_25_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_green_26():
+            main.card_green_26_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+        def continue_green_27():
+            main.card_green_27_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_green_28():
+            main.card_green_28_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_green_29():
+            main.card_green_29_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_green_30():
+            main.card_green_30_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_yellow_31():
+            main.card_yellow_31_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_yellow_32():
+            main.card_yellow_32_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_yellow_33():
+            main.card_yellow_33_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+        def continue_yellow_34():
+            main.card_yellow_34_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_yellow_35():
+            main.card_yellow_35_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_yellow_36():
+            main.card_yellow_36_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_yellow_37():
+            main.card_yellow_37_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+        def continue_yellow_38():
+            main.card_yellow_38_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_yellow_39():
+            main.card_yellow_39_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_yellow_40():
+            main.card_yellow_40_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_brown_41():
+            main.card_brown_41_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_brown_42():
+            main.card_brown_42_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_brown_43():
+            main.card_brown_43_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+        def continue_brown_44():
+            main.card_brown_44_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_brown_45():
+            main.card_brown_45_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_brown_46():
+            main.card_brown_46_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_brown_47():
+            main.card_brown_47_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+        def continue_brown_48():
+            main.card_brown_48_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_brown_49():
+            main.card_brown_49_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_brown_50():
+            main.card_brown_50_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_purple_51():
+            main.card_purple_51_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_purple_52():
+            main.card_purple_52_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_purple_53():
+            main.card_purple_53_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+        def continue_purple_54():
+            main.card_purple_54_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_purple_55():
+            main.card_purple_55_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_purple_56():
+            main.card_purple_56_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_purple_57():
+            main.card_purple_57_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+        def continue_purple_58():
+            main.card_purple_58_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_purple_59():
+            main.card_purple_59_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_purple_60():
+            main.card_purple_60_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_orange_61():
+            main.card_orange_61_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_orange_62():
+            main.card_orange_62_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"b")
+        def continue_orange_63():
+            main.card_orange_63_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"f")
+        def continue_orange_64():
+            main.card_orange_64_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_orange_65():
+            main.card_orange_65_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"b")
+        def continue_orange_66():
+            main.card_orange_66_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_orange_67():
+            main.card_orange_67_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(1,"b")
+        def continue_orange_68():
+            main.card_orange_68_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(3,"f")
+        def continue_orange_69():
+            main.card_orange_69_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
+        def continue_orange_70():
+            main.card_orange_70_frame.place_forget()
+            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
+            main.move_f_or_b(2,"f")
 
         
         # ===========================
@@ -1403,6 +1337,76 @@ class SeedAdventure:
         main.card_orange_70_label_middle_down.pack(pady=20)
         main.card_orange_70_continue.pack(side="bottom", pady=20)
         main.rolldicebutton = tk.Button(main.canvas_for_game,command=rolldicebuttoncommand,text="Roll Dice", font=("Arial",20),bg="black",fg="white",activebackground="black",activeforeground="white")
+        main.card_blue_1_continue.config(command=continue_blue_1)
+        main.card_blue_2_continue.config(command=continue_blue_2)
+        main.card_blue_3_continue.config(command=continue_blue_3)
+        main.card_blue_4_continue.config(command=continue_blue_4)
+        main.card_blue_5_continue.config(command=continue_blue_5)
+        main.card_blue_6_continue.config(command=continue_blue_6)
+        main.card_blue_7_continue.config(command=continue_blue_7)
+        main.card_blue_8_continue.config(command=continue_blue_8)
+        main.card_blue_9_continue.config(command=continue_blue_9)
+        main.card_blue_10_continue.config(command=continue_blue_10)
+        main.card_red_11_continue.config(command=continue_red_11)
+        main.card_red_12_continue.config(command=continue_red_12)
+        main.card_red_13_continue.config(command=continue_red_13)
+        main.card_red_14_continue.config(command=continue_red_14)
+        main.card_red_15_continue.config(command=continue_red_15)
+        main.card_red_16_continue.config(command=continue_red_16)
+        main.card_red_17_continue.config(command=continue_red_17)
+        main.card_red_18_continue.config(command=continue_red_18)
+        main.card_red_19_continue.config(command=continue_red_19)
+        main.card_red_20_continue.config(command=continue_red_20)
+        main.card_green_21_continue.config(command=continue_green_21)
+        main.card_green_22_continue.config(command=continue_green_22)
+        main.card_green_23_continue.config(command=continue_green_23)
+        main.card_green_24_continue.config(command=continue_green_24)
+        main.card_green_25_continue.config(command=continue_green_25)
+        main.card_green_26_continue.config(command=continue_green_26)
+        main.card_green_27_continue.config(command=continue_green_27)
+        main.card_green_28_continue.config(command=continue_green_28)
+        main.card_green_29_continue.config(command=continue_green_29)
+        main.card_green_30_continue.config(command=continue_green_30)
+        main.card_yellow_31_continue.config(command=continue_yellow_31)
+        main.card_yellow_32_continue.config(command=continue_yellow_32)
+        main.card_yellow_33_continue.config(command=continue_yellow_33)
+        main.card_yellow_34_continue.config(command=continue_yellow_34)
+        main.card_yellow_35_continue.config(command=continue_yellow_35)
+        main.card_yellow_36_continue.config(command=continue_yellow_36)
+        main.card_yellow_37_continue.config(command=continue_yellow_37)
+        main.card_yellow_38_continue.config(command=continue_yellow_38)
+        main.card_yellow_39_continue.config(command=continue_yellow_39)
+        main.card_yellow_40_continue.config(command=continue_yellow_40)
+        main.card_brown_41_continue.config(command=continue_brown_41)
+        main.card_brown_42_continue.config(command=continue_brown_42)
+        main.card_brown_43_continue.config(command=continue_brown_43)
+        main.card_brown_44_continue.config(command=continue_brown_44)
+        main.card_brown_45_continue.config(command=continue_brown_45)
+        main.card_brown_46_continue.config(command=continue_brown_46)
+        main.card_brown_47_continue.config(command=continue_brown_47)
+        main.card_brown_48_continue.config(command=continue_brown_48)
+        main.card_brown_49_continue.config(command=continue_brown_49)
+        main.card_brown_50_continue.config(command=continue_brown_50)
+        main.card_purple_51_continue.config(command=continue_purple_51)
+        main.card_purple_52_continue.config(command=continue_purple_52)
+        main.card_purple_53_continue.config(command=continue_purple_53)
+        main.card_purple_54_continue.config(command=continue_purple_54)
+        main.card_purple_55_continue.config(command=continue_purple_55)
+        main.card_purple_56_continue.config(command=continue_purple_56)
+        main.card_purple_57_continue.config(command=continue_purple_57)
+        main.card_purple_58_continue.config(command=continue_purple_58)
+        main.card_purple_59_continue.config(command=continue_purple_59)
+        main.card_purple_60_continue.config(command=continue_purple_60)
+        main.card_orange_61_continue.config(command=continue_orange_61)
+        main.card_orange_62_continue.config(command=continue_orange_62)
+        main.card_orange_63_continue.config(command=continue_orange_63)
+        main.card_orange_64_continue.config(command=continue_orange_64)
+        main.card_orange_65_continue.config(command=continue_orange_65)
+        main.card_orange_66_continue.config(command=continue_orange_66)
+        main.card_orange_67_continue.config(command=continue_orange_67)
+        main.card_orange_68_continue.config(command=continue_orange_68)
+        main.card_orange_69_continue.config(command=continue_orange_69)
+        main.card_orange_70_continue.config(command=continue_orange_70)
         main.rolldicebutton.place(x=10, y=10)
         main.player_position = 0
         main.player = main.canvas_for_game.create_oval(135, 185, 165, 215,fill="#402c03",outline="black",width=2)
