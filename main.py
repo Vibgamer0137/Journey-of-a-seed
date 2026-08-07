@@ -8,13 +8,13 @@ class SeedAdventure:
         main.root = root
         main.player_position = 0
     def check_win(main):
-        if main.player_position >= 67:
+        if main.player_position >= 63:
             main.show_win_screen()
             return 
         else:
             main.root.after(100, main.check_win)  # Check again in 100 ms
     def show_win_screen(main):
-        w.PlaySound("", w.SND_FILENAME | w.SND_ASYNC)
+        #w.PlaySound("", w.SND_FILENAME | w.SND_ASYNC)
         main.tree_image = tk.PhotoImage(file="C:\\Users\\Sai Varun\\Journey of a seed\\Assets\\Images\\Supported types\\tree.png")
         # Stop background sound (optional)
         # winsound.PlaySound(None, 0)
@@ -74,10 +74,17 @@ class SeedAdventure:
             command=main.root.destroy
         ).pack(pady=5)
     def move_f_or_b(main, how_much_to_move, f_or_b):
-        print("=" * 30)
-        print("move_f_or_b called")
-        print("Position before:", main.player_position)
-        print("Move:", how_much_to_move, f_or_b)
+        print("=== CARD MOVE ===")
+        print("Move amount:", how_much_to_move)
+        print("Direction:", f_or_b)
+        print("Before:", main.player_position)
+        if f_or_b == "f":
+            main.player_position += how_much_to_move
+        elif f_or_b == "b":
+            main.player_position -= how_much_to_move
+        else:
+            print("ERROR: Invalid direction!")
+            return
         if f_or_b == "f":
             main.player_position += how_much_to_move
         elif f_or_b == "b":
@@ -95,7 +102,7 @@ class SeedAdventure:
         
         # Moves the player token oval on the canvas
         main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
-        print("CONTINUE BLUE 1")
+        # Check the tile landed on after moving
     def frame_new_plus_board_game(main):
         main.check_win()
         DICE_SOUND = o.path.join("Assets","Sounds","Wav","dice_sound.wav")
@@ -119,12 +126,16 @@ class SeedAdventure:
             y += 100
 
         def rolldicebuttoncommand():
-            w.PlaySound(DICE_SOUND, w.SND_FILENAME | w.SND_ASYNC)
-            main.root.after(700)
+            print("ROLL FUNCTION ENTERED")    
+            print("=== ROLL ===")
+            print("Before roll:", main.player_position)
+            main.rolldicebutton.config(state="disabled")
+            #w.PlaySound(DICE_SOUND, w.SND_FILENAME | w.SND_ASYNC)
             dice = r.randint(1, 3)
             rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17),bg="black",fg="white")
             rolleddicebuttonlabel.place(x=10, y=65)
             main.player_position += dice
+            print("After card move:", main.player_position)
             if main.player_position > 63:
                 main.player_position = 63
             row = main.player_position // 8
@@ -133,8 +144,7 @@ class SeedAdventure:
             x = 100 + col * 100 + 35
             y = 150 + row * 100 + 35
             main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
-            current_colour = main.colours_for_tiles[main.player_position]
-            main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
+            current_colour = main.colours_for_tiles[main.player_position]  
             if current_colour == main.colours[0]:
                 rolleddicebuttonlabel.place_forget()
                 main.game.place_forget()
@@ -150,7 +160,7 @@ class SeedAdventure:
                     main.card_blue_9_frame,
                     main.card_blue_10_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(blue_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -169,7 +179,7 @@ class SeedAdventure:
                     main.card_red_19_frame,
                     main.card_red_20_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(red_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -188,7 +198,7 @@ class SeedAdventure:
                     main.card_green_29_frame,
                     main.card_green_30_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(green_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place()
@@ -207,7 +217,7 @@ class SeedAdventure:
                     main.card_yellow_39_frame,
                     main.card_yellow_40_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(yellow_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -226,7 +236,7 @@ class SeedAdventure:
                     main.card_brown_49_frame,
                     main.card_brown_50_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(brown_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -245,7 +255,7 @@ class SeedAdventure:
                     main.card_purple_59_frame,
                     main.card_purple_60_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(purple_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
@@ -264,307 +274,376 @@ class SeedAdventure:
                     main.card_orange_69_frame,
                     main.card_orange_70_frame
                 ]
-                main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
                 main.card = r.choice(orange_cards)
                 main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
                 rolleddicebuttonlabel.place(x=10,y=65)
             else:
                 print("Error code:5500")
         def continue_blue_1():
-            print("ROLL BUTTON PRESSED")
+            print("BLUE CARD 1 PRESSED")
             main.card_blue_1_frame.place_forget()
-            main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
-            print("CONTINUE BLUE 1")
+            main.game.place(relx=0, rely=0, relheight=1, relwidth=1)
+
+            print("Position before:", main.player_position)
+
+            main.move_f_or_b(2, "f")
+
+            print("Position after:", main.player_position)
 
         def continue_blue_2():
             main.card_blue_2_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_3():
             main.card_blue_3_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_4():
             main.card_blue_4_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_5():
             main.card_blue_5_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_6():
             main.card_blue_6_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_7():
             main.card_blue_7_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_8():
             main.card_blue_8_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
 
         def continue_blue_9():
             main.card_blue_9_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_blue_10():
             main.card_blue_10_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_red_11():
             main.card_red_11_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_red_12():
             main.card_red_12_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_red_13():
             main.card_red_13_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_red_14():
             main.card_red_14_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_red_15():
             main.card_red_15_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_red_16():
             main.card_red_16_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_red_17():
             main.card_red_17_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_red_18():
             main.card_red_18_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_red_19():
             main.card_red_19_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_red_20():
             main.card_red_20_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(5,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_green_21():
             main.card_green_21_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_green_22():
             main.card_green_22_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_green_23():
             main.card_green_23_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_green_24():
             main.card_green_24_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_green_25():
             main.card_green_25_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_green_26():
             main.card_green_26_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_green_27():
             main.card_green_27_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_green_28():
             main.card_green_28_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_green_29():
             main.card_green_29_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_green_30():
             main.card_green_30_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_31():
             main.card_yellow_31_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_32():
             main.card_yellow_32_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_33():
             main.card_yellow_33_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_34():
             main.card_yellow_34_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_35():
             main.card_yellow_35_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_36():
             main.card_yellow_36_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_37():
             main.card_yellow_37_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_38():
             main.card_yellow_38_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_39():
             main.card_yellow_39_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_yellow_40():
             main.card_yellow_40_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_41():
             main.card_brown_41_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_42():
             main.card_brown_42_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_43():
             main.card_brown_43_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_44():
             main.card_brown_44_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_45():
             main.card_brown_45_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_46():
             main.card_brown_46_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_47():
             main.card_brown_47_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_48():
             main.card_brown_48_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_49():
             main.card_brown_49_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_brown_50():
             main.card_brown_50_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_51():
             main.card_purple_51_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_52():
             main.card_purple_52_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_53():
             main.card_purple_53_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_54():
             main.card_purple_54_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_55():
             main.card_purple_55_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_56():
             main.card_purple_56_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_57():
             main.card_purple_57_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_58():
             main.card_purple_58_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_59():
             main.card_purple_59_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_purple_60():
             main.card_purple_60_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_61():
             main.card_orange_61_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_62():
             main.card_orange_62_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_63():
             main.card_orange_63_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_64():
             main.card_orange_64_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_65():
             main.card_orange_65_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_66():
             main.card_orange_66_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_67():
             main.card_orange_67_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(1,"b")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_68():
             main.card_orange_68_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(3,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_69():
             main.card_orange_69_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
         def continue_orange_70():
             main.card_orange_70_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
+            main.rolldicebutton.config(state="normal")
 
-        
-        # ===========================
-        # BLUE CARD 1
-        # ===========================
         main.card_blue_1_frame = tk.Frame(main.root, bg="white", bd=5, relief="ridge")
         main.card_blue_1_title = tk.Label(main.card_blue_1_frame,
                                         text="🌧 BLUE CARD",
