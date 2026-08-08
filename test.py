@@ -11,9 +11,7 @@ csv_file = "card_analysis.csv"
 with open(python_file, "r", encoding="utf-8") as f:
     code = f.read()
 
-
 rows = []
-
 
 # --------------------------------------------------
 # CHECK CARDS 1–70
@@ -38,7 +36,6 @@ for n in range(1, 71):
         color = "UNKNOWN"
         problems.append("Missing card")
 
-
     # ----------------------------------------------
     # FIND CARD MOVEMENT TEXT
     # ----------------------------------------------
@@ -54,14 +51,20 @@ for n in range(1, 71):
 
         card_text = card_movement_match.group(1)
 
-        # Check forward/backward
+        # ------------------------------------------
+        # CHECK FORWARD / BACK / BACKWARD
+        # ------------------------------------------
+
         direction_match = re.search(
-            r'\b(forward|backward)\b',
+            r'\b(forward|backward|back)\b',
             card_text,
             re.IGNORECASE
         )
 
-        # Check number
+        # ------------------------------------------
+        # CHECK NUMBER
+        # ------------------------------------------
+
         number_match = re.search(
             r'(\d+)\s*spaces?',
             card_text,
@@ -69,16 +72,34 @@ for n in range(1, 71):
         )
 
         if direction_match:
-            card_direction = direction_match.group(1).lower()
+
+            detected_direction = direction_match.group(1).lower()
+
+            # "back" and "backward" both mean backward
+            if detected_direction in ("back", "backward"):
+                card_direction = "backward"
+            else:
+                card_direction = "forward"
+
         else:
+
             card_direction = ""
-            problems.append("No forward/backward in card")
+            problems.append(
+                "No forward/back/backward in card"
+            )
 
         if number_match:
-            card_movement = int(number_match.group(1))
+
+            card_movement = int(
+                number_match.group(1)
+            )
+
         else:
+
             card_movement = ""
-            problems.append("No movement number in card")
+            problems.append(
+                "No movement number in card"
+            )
 
     else:
 
@@ -86,8 +107,9 @@ for n in range(1, 71):
         card_direction = ""
         card_movement = ""
 
-        problems.append("Missing movement label")
-
+        problems.append(
+            "Missing movement label"
+        )
 
     # ----------------------------------------------
     # FIND CONTINUE BUTTON
@@ -103,8 +125,9 @@ for n in range(1, 71):
     )
 
     if not button_exists:
-        problems.append("Missing Continue button")
-
+        problems.append(
+            "Missing Continue button"
+        )
 
     # ----------------------------------------------
     # CHECK BUTTON COMMAND
@@ -117,12 +140,15 @@ for n in range(1, 71):
     )
 
     button_has_command = bool(
-        re.search(button_command_pattern, code)
+        re.search(
+            button_command_pattern,
+            code
+        )
     )
 
     if not button_has_command:
 
-        # Also check if command was inside the Button itself
+        # Also check if command is inside Button
         button_inline_pattern = (
             rf'main\.card_\w+_{n}_continue'
             rf'\s*=\s*tk\.Button'
@@ -138,8 +164,10 @@ for n in range(1, 71):
         )
 
     if not button_has_command:
-        problems.append("Missing button command")
 
+        problems.append(
+            "Missing button command"
+        )
 
     # ----------------------------------------------
     # FIND CONTINUE FUNCTION
@@ -156,11 +184,15 @@ for n in range(1, 71):
         re.DOTALL
     )
 
-    function_exists = bool(function_match)
+    function_exists = bool(
+        function_match
+    )
 
     if not function_exists:
 
-        problems.append("Missing Continue function")
+        problems.append(
+            "Missing Continue function"
+        )
 
         code_movement = ""
         code_direction = ""
@@ -180,13 +212,14 @@ for n in range(1, 71):
 
         if move_match:
 
-            code_movement = int(move_match.group(1))
-
-            code_direction = (
-                "forward"
-                if move_match.group(2) == "f"
-                else "backward"
+            code_movement = int(
+                move_match.group(1)
             )
+
+            if move_match.group(2) == "f":
+                code_direction = "forward"
+            else:
+                code_direction = "backward"
 
         else:
 
@@ -196,7 +229,6 @@ for n in range(1, 71):
             problems.append(
                 "No move_f_or_b() in function"
             )
-
 
     # ----------------------------------------------
     # CHECK MOVEMENT NUMBER
@@ -209,10 +241,10 @@ for n in range(1, 71):
     ):
 
         problems.append(
-            f"Number mismatch: card={card_movement}, "
+            f"Number mismatch: "
+            f"card={card_movement}, "
             f"code={code_movement}"
         )
-
 
     # ----------------------------------------------
     # CHECK FORWARD / BACKWARD
@@ -225,17 +257,16 @@ for n in range(1, 71):
     ):
 
         problems.append(
-            f"Direction mismatch: card={card_direction}, "
+            f"Direction mismatch: "
+            f"card={card_direction}, "
             f"code={code_direction}"
         )
-
 
     # ----------------------------------------------
     # FINAL RESULT
     # ----------------------------------------------
 
     correct = len(problems) == 0
-
 
     rows.append([
         n,
@@ -253,9 +284,9 @@ for n in range(1, 71):
     ])
 
 
-# --------------------------------------------------
+# ==================================================
 # CREATE CSV
-# --------------------------------------------------
+# ==================================================
 
 with open(
     csv_file,
@@ -284,9 +315,9 @@ with open(
     writer.writerows(rows)
 
 
-# --------------------------------------------------
+# ==================================================
 # ANALYSIS
-# --------------------------------------------------
+# ==================================================
 
 total = len(rows)
 
@@ -296,7 +327,6 @@ correct = sum(
 )
 
 wrong = total - correct
-
 
 print("=" * 60)
 print("        SEED ADVENTURE CARD ANALYSIS")
@@ -309,9 +339,9 @@ print("Problems    :", wrong)
 print()
 
 
-# --------------------------------------------------
+# ==================================================
 # SHOW PROBLEMS
-# --------------------------------------------------
+# ==================================================
 
 print("=" * 60)
 print("PROBLEMS")
