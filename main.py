@@ -1606,10 +1606,16 @@ class SeedAdventure:
         main.title.place(relx=0.5,rely=0.2,anchor="center")
         main.play_button = tk.Button(main.menu, text = "Play the game!", font=("Segoe UI", 25, "bold"),command = main.start_game)
         main.play_button.place(relx=0.5,rely=0.3,anchor="center")
-
-        
+def resource_path(relative_path):
+    if getattr(sys, "frozen", False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = o.path.dirname(o.path.abspath(__file__))    
+    return o.path.join(base_path, relative_path)
 window=tk.Tk()
 game=SeedAdventure(window)
+icon = tk.PhotoImage(file=resource_path(o.path.join("Assets","Images","Supported types", "icon.png")))
+window.iconphoto(True,icon)
 window.geometry("1000x1000")
 window.title("Journey of a seed game")
 window.resizable(False, False)
