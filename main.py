@@ -7,6 +7,12 @@ class SeedAdventure:
     def __init__(main, root):
         main.root = root
         main.player_position = 0
+        main.is_animating = False
+        main.animate_move_steps = 0
+        main.animate_move_direction = None
+        main.dice_animation_running = False
+        main.dice_animation_steps = 0
+        main.final_dice_number = 0
     def check_win(main):
         if main.player_position >= 63:
             main.show_win_screen()
@@ -73,36 +79,86 @@ class SeedAdventure:
             fg="white",
             command=main.root.destroy
         ).pack(pady=5)
+    def animate_player_step(main, after_move = None):
+        if main.animate_move_steps <= 0:
+            main.is_animating = False
+            main.animate_move_direction = None
+
+            print("Animation finished!")
+            print("Final position:", main.player_position)
+            if after_move:
+                after_move()
+            return
+
+        if main.animate_move_direction == "f":
+            main.player_position += 1
+        else:
+            main.player_position -= 1
+
+        if main.player_position < 0:
+            main.player_position = 0
+            main.animate_move_steps = 0
+
+        elif main.player_position > 63:
+            main.player_position = 63
+            main.animate_move_steps = 0
+
+        row = main.player_position // 8
+
+        if row % 2 == 0:
+            col = main.player_position % 8
+        else:
+            col = 7 - (main.player_position % 8)
+
+        x = 100 + col * 100 + 35
+        y = 150 + row * 100 + 35
+
+        main.canvas_for_game.coords(
+            main.player,
+            x, y,
+            x + 30, y + 30
+        )
+
+        print("Player position:", main.player_position)
+
+        main.animate_move_steps -= 1
+
+        main.root.after(
+            150,
+            lambda: main.animate_player_step(after_move)
+        )
+    def animate_dice(main):
+        if main.dice_animation_steps <= 0:
+            main.dice_animation_running = False
+            # Show the actual final number
+            main.dice_label.config(text=str(main.final_dice_number))
+            # Now perform the real movement
+            main.move_f_or_b(main.final_dice_number, "f")
+            return
+        # Show a random dice number
+        random_number = r.randint(1, 6)
+        main.dice_label.config(text=str(random_number))
+        main.dice_animation_steps -= 1
+        # Run again after 100 ms
+        main.root.after(100, lambda: main.animate_dice())
     def move_f_or_b(main, how_much_to_move, f_or_b):
+        if main.is_animating:
+            print("Already moving — ignoring movement request.")
+            return
         print("=== CARD MOVE ===")
         print("Move amount:", how_much_to_move)
         print("Direction:", f_or_b)
         print("Before:", main.player_position)
-        if f_or_b == "f":
-            main.player_position += how_much_to_move
-        elif f_or_b == "b":
-            main.player_position -= how_much_to_move
-        else:
+
+        if f_or_b not in ("f", "b"):
             print("ERROR: Invalid direction!")
             return
-        if f_or_b == "f":
-            main.player_position += how_much_to_move
-        elif f_or_b == "b":
-            main.player_position -= how_much_to_move
-        if main.player_position < 0:
-            main.player_position = 0
-        if main.player_position > 63:
-            main.player_position = 63
-    
-        row = main.player_position // 8
-        col = main.player_position % 8
-    
-        x = 100 + col * 100 + 35
-        y = 150 + row * 100 + 35
-        
-        # Moves the player token oval on the canvas
-        main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
-        # Check the tile landed on after moving
+
+        # Start the animation
+        main.animate_move_steps = how_much_to_move
+        main.animate_move_direction = f_or_b
+
+        main.animate_player_step()
     def frame_new_plus_board_game(main):
         main.check_win()
         DICE_SOUND = o.path.join("Assets","Sounds","Wav","dice_sound.wav")
@@ -130,156 +186,164 @@ class SeedAdventure:
             print("=== ROLL ===")
             print("Before roll:", main.player_position)
             main.rolldicebutton.config(state="disabled")
-            #w.PlaySound(DICE_SOUND, w.SND_FILENAME | w.SND_ASYNC)
+            w.PlaySound(DICE_SOUND, w.SND_FILENAME | w.SND_ASYNC)
             dice = r.randint(1, 3)
-            rolleddicebuttonlabel = tk.Label(main.root, text=dice, font=("Arial",17),bg="black",fg="white")
-            rolleddicebuttonlabel.place(x=10, y=65)
-            main.player_position += dice
-            print("After card move:", main.player_position)
-            if main.player_position > 63:
-                main.player_position = 63
-            row = main.player_position // 8
-            col = main.player_position % 8
 
-            x = 100 + col * 100 + 35
-            y = 150 + row * 100 + 35
-            main.canvas_for_game.coords(main.player, x, y, x + 30, y + 30)
-            current_colour = main.colours_for_tiles[main.player_position]  
-            if current_colour == main.colours[0]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                blue_cards = [
-                    main.card_blue_1_frame,
-                    main.card_blue_2_frame,
-                    main.card_blue_3_frame,
-                    main.card_blue_4_frame,
-                    main.card_blue_5_frame,
-                    main.card_blue_6_frame,
-                    main.card_blue_7_frame,
-                    main.card_blue_8_frame,
-                    main.card_blue_9_frame,
-                    main.card_blue_10_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(blue_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place(x=10,y=65)
-            elif current_colour == main.colours[1]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                red_cards = [
-                    main.card_red_11_frame,
-                    main.card_red_12_frame,
-                    main.card_red_13_frame,
-                    main.card_red_14_frame,
-                    main.card_red_15_frame,
-                    main.card_red_16_frame,
-                    main.card_red_17_frame,
-                    main.card_red_18_frame,
-                    main.card_red_19_frame,
-                    main.card_red_20_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(red_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place(x=10,y=65)
-            elif current_colour == main.colours[2]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                green_cards = [
-                    main.card_green_21_frame,
-                    main.card_green_22_frame,
-                    main.card_green_23_frame,
-                    main.card_green_24_frame,
-                    main.card_green_25_frame,
-                    main.card_green_26_frame,
-                    main.card_green_27_frame,
-                    main.card_green_28_frame,
-                    main.card_green_29_frame,
-                    main.card_green_30_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(green_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place()
-            elif current_colour == main.colours[3]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                yellow_cards = [
-                    main.card_yellow_31_frame,
-                    main.card_yellow_32_frame,
-                    main.card_yellow_33_frame,
-                    main.card_yellow_34_frame,
-                    main.card_yellow_35_frame,
-                    main.card_yellow_36_frame,
-                    main.card_yellow_37_frame,
-                    main.card_yellow_38_frame,
-                    main.card_yellow_39_frame,
-                    main.card_yellow_40_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(yellow_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place(x=10,y=65)
-            elif current_colour == main.colours[4]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                brown_cards = [
-                    main.card_brown_41_frame,
-                    main.card_brown_42_frame,
-                    main.card_brown_43_frame,
-                    main.card_brown_44_frame,
-                    main.card_brown_45_frame,
-                    main.card_brown_46_frame,
-                    main.card_brown_47_frame,
-                    main.card_brown_48_frame,
-                    main.card_brown_49_frame,
-                    main.card_brown_50_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(brown_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place(x=10,y=65)
-            elif current_colour == main.colours[5]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                purple_cards = [
-                    main.card_purple_51_frame,
-                    main.card_purple_52_frame,
-                    main.card_purple_53_frame,
-                    main.card_purple_54_frame,
-                    main.card_purple_55_frame,
-                    main.card_purple_56_frame,
-                    main.card_purple_57_frame,
-                    main.card_purple_58_frame,
-                    main.card_purple_59_frame,
-                    main.card_purple_60_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(purple_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place(x=10,y=65)
-            elif current_colour == main.colours[6]:
-                rolleddicebuttonlabel.place_forget()
-                main.game.place_forget()
-                orange_cards = [
-                    main.card_orange_61_frame,
-                    main.card_orange_62_frame,
-                    main.card_orange_63_frame,
-                    main.card_orange_64_frame,
-                    main.card_orange_65_frame,
-                    main.card_orange_66_frame,
-                    main.card_orange_67_frame,
-                    main.card_orange_68_frame,
-                    main.card_orange_69_frame,
-                    main.card_orange_70_frame
-                ]
-                #main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
-                main.card = r.choice(orange_cards)
-                main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
-                rolleddicebuttonlabel.place(x=10,y=65)
-            else:
-                print("Error code:5500")
+            rolleddicebuttonlabel = tk.Label(
+                main.game,
+                text=dice,
+                font=("Arial", 17),
+                bg="black",
+                fg="white"
+            )
+
+            rolleddicebuttonlabel.place(x=10, y=65)
+
+            print("Dice rolled:", dice)
+            def show_card_after_move():
+                current_colour = main.colours_for_tiles[main.player_position]  
+                if current_colour == main.colours[0]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    blue_cards = [
+                        main.card_blue_1_frame,
+                        main.card_blue_2_frame,
+                        main.card_blue_3_frame,
+                        main.card_blue_4_frame,
+                        main.card_blue_5_frame,
+                        main.card_blue_6_frame,
+                        main.card_blue_7_frame,
+                        main.card_blue_8_frame,
+                        main.card_blue_9_frame,
+                        main.card_blue_10_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(blue_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place(x=10,y=65)
+                elif current_colour == main.colours[1]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    red_cards = [
+                        main.card_red_11_frame,
+                        main.card_red_12_frame,
+                        main.card_red_13_frame,
+                        main.card_red_14_frame,
+                        main.card_red_15_frame,
+                        main.card_red_16_frame,
+                        main.card_red_17_frame,
+                        main.card_red_18_frame,
+                        main.card_red_19_frame,
+                        main.card_red_20_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(red_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place(x=10,y=65)
+                elif current_colour == main.colours[2]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    green_cards = [
+                        main.card_green_21_frame,
+                        main.card_green_22_frame,
+                        main.card_green_23_frame,
+                        main.card_green_24_frame,
+                        main.card_green_25_frame,
+                        main.card_green_26_frame,
+                        main.card_green_27_frame,
+                        main.card_green_28_frame,
+                        main.card_green_29_frame,
+                        main.card_green_30_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(green_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place()
+                elif current_colour == main.colours[3]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    yellow_cards = [
+                        main.card_yellow_31_frame,
+                        main.card_yellow_32_frame,
+                        main.card_yellow_33_frame,
+                        main.card_yellow_34_frame,
+                        main.card_yellow_35_frame,
+                        main.card_yellow_36_frame,
+                        main.card_yellow_37_frame,
+                        main.card_yellow_38_frame,
+                        main.card_yellow_39_frame,
+                        main.card_yellow_40_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(yellow_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place(x=10,y=65)
+                elif current_colour == main.colours[4]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    brown_cards = [
+                        main.card_brown_41_frame,
+                        main.card_brown_42_frame,
+                        main.card_brown_43_frame,
+                        main.card_brown_44_frame,
+                        main.card_brown_45_frame,
+                        main.card_brown_46_frame,
+                        main.card_brown_47_frame,
+                        main.card_brown_48_frame,
+                        main.card_brown_49_frame,
+                        main.card_brown_50_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(brown_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place(x=10,y=65)
+                elif current_colour == main.colours[5]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    purple_cards = [
+                        main.card_purple_51_frame,
+                        main.card_purple_52_frame,
+                        main.card_purple_53_frame,
+                        main.card_purple_54_frame,
+                        main.card_purple_55_frame,
+                        main.card_purple_56_frame,
+                        main.card_purple_57_frame,
+                        main.card_purple_58_frame,
+                        main.card_purple_59_frame,
+                        main.card_purple_60_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(purple_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place(x=10,y=65)
+                elif current_colour == main.colours[6]:
+                    rolleddicebuttonlabel.place_forget()
+                    main.game.place_forget()
+                    orange_cards = [
+                        main.card_orange_61_frame,
+                        main.card_orange_62_frame,
+                        main.card_orange_63_frame,
+                        main.card_orange_64_frame,
+                        main.card_orange_65_frame,
+                        main.card_orange_66_frame,
+                        main.card_orange_67_frame,
+                        main.card_orange_68_frame,
+                        main.card_orange_69_frame,
+                        main.card_orange_70_frame
+                    ]
+                    main.root.after(600, lambda:main.root.after(600, lambda:w.PlaySound(CARD_SOUND, w.SND_FILENAME | w.SND_ASYNC)))
+                    main.card = r.choice(orange_cards)
+                    main.card.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+                    rolleddicebuttonlabel.place(x=10,y=65)
+                else:
+                    print("Error code:5500")
+            # Start smooth movement
+            main.animate_move_steps = dice
+            main.animate_move_direction = "f"
+            main.is_animating = True
+
+            main.animate_player_step(show_card_after_move)
+                # Wait until animation finishes before showing the card
         def continue_blue_1():
             print("BLUE CARD 1 PRESSED")
             main.card_blue_1_frame.place_forget()
@@ -300,31 +364,31 @@ class SeedAdventure:
         def continue_blue_3():
             main.card_blue_3_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
 
         def continue_blue_4():
             main.card_blue_4_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(1,"f")
             main.rolldicebutton.config(state="normal")
 
         def continue_blue_5():
             main.card_blue_5_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
 
         def continue_blue_6():
             main.card_blue_6_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
 
         def continue_blue_7():
             main.card_blue_7_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"f")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
 
         def continue_blue_8():
@@ -336,7 +400,7 @@ class SeedAdventure:
         def continue_blue_9():
             main.card_blue_9_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_blue_10():
             main.card_blue_10_frame.place_forget()
@@ -346,27 +410,27 @@ class SeedAdventure:
         def continue_red_11():
             main.card_red_11_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_12():
             main.card_red_12_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_13():
             main.card_red_13_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_14():
             main.card_red_14_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_15():
             main.card_red_15_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_16():
             main.card_red_16_frame.place_forget()
@@ -376,12 +440,12 @@ class SeedAdventure:
         def continue_red_17():
             main.card_red_17_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_18():
             main.card_red_18_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_red_19():
             main.card_red_19_frame.place_forget()
@@ -391,17 +455,17 @@ class SeedAdventure:
         def continue_red_20():
             main.card_red_20_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(5,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_green_21():
             main.card_green_21_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_green_22():
             main.card_green_22_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_green_23():
             main.card_green_23_frame.place_forget()
@@ -411,7 +475,7 @@ class SeedAdventure:
         def continue_green_24():
             main.card_green_24_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_green_25():
             main.card_green_25_frame.place_forget()
@@ -421,7 +485,7 @@ class SeedAdventure:
         def continue_green_26():
             main.card_green_26_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_green_27():
             main.card_green_27_frame.place_forget()
@@ -436,7 +500,7 @@ class SeedAdventure:
         def continue_green_29():
             main.card_green_29_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_green_30():
             main.card_green_30_frame.place_forget()
@@ -446,17 +510,17 @@ class SeedAdventure:
         def continue_yellow_31():
             main.card_yellow_31_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_yellow_32():
             main.card_yellow_32_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_yellow_33():
             main.card_yellow_33_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_yellow_34():
             main.card_yellow_34_frame.place_forget()
@@ -466,7 +530,7 @@ class SeedAdventure:
         def continue_yellow_35():
             main.card_yellow_35_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_yellow_36():
             main.card_yellow_36_frame.place_forget()
@@ -476,7 +540,7 @@ class SeedAdventure:
         def continue_yellow_37():
             main.card_yellow_37_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_yellow_38():
             main.card_yellow_38_frame.place_forget()
@@ -486,17 +550,17 @@ class SeedAdventure:
         def continue_yellow_39():
             main.card_yellow_39_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_yellow_40():
             main.card_yellow_40_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_41():
             main.card_brown_41_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_42():
             main.card_brown_42_frame.place_forget()
@@ -506,7 +570,7 @@ class SeedAdventure:
         def continue_brown_43():
             main.card_brown_43_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_44():
             main.card_brown_44_frame.place_forget()
@@ -516,17 +580,17 @@ class SeedAdventure:
         def continue_brown_45():
             main.card_brown_45_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_46():
             main.card_brown_46_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_47():
             main.card_brown_47_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_48():
             main.card_brown_48_frame.place_forget()
@@ -536,7 +600,7 @@ class SeedAdventure:
         def continue_brown_49():
             main.card_brown_49_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_brown_50():
             main.card_brown_50_frame.place_forget()
@@ -546,17 +610,17 @@ class SeedAdventure:
         def continue_purple_51():
             main.card_purple_51_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_purple_52():
             main.card_purple_52_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_purple_53():
             main.card_purple_53_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_purple_54():
             main.card_purple_54_frame.place_forget()
@@ -566,7 +630,7 @@ class SeedAdventure:
         def continue_purple_55():
             main.card_purple_55_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_purple_56():
             main.card_purple_56_frame.place_forget()
@@ -576,7 +640,7 @@ class SeedAdventure:
         def continue_purple_57():
             main.card_purple_57_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_purple_58():
             main.card_purple_58_frame.place_forget()
@@ -586,12 +650,12 @@ class SeedAdventure:
         def continue_purple_59():
             main.card_purple_59_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_purple_60():
             main.card_purple_60_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_61():
             main.card_orange_61_frame.place_forget()
@@ -601,12 +665,12 @@ class SeedAdventure:
         def continue_orange_62():
             main.card_orange_62_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_63():
             main.card_orange_63_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_64():
             main.card_orange_64_frame.place_forget()
@@ -616,17 +680,17 @@ class SeedAdventure:
         def continue_orange_65():
             main.card_orange_65_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_66():
             main.card_orange_66_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(3,"f")
+            main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_67():
             main.card_orange_67_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(1,"b")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_68():
             main.card_orange_68_frame.place_forget()
@@ -636,36 +700,33 @@ class SeedAdventure:
         def continue_orange_69():
             main.card_orange_69_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
-            main.move_f_or_b(2,"f")
+            main.move_f_or_b(3,"f")
             main.rolldicebutton.config(state="normal")
         def continue_orange_70():
             main.card_orange_70_frame.place_forget()
             main.game.place(relx=0,rely=0,relheight=1,relwidth=1)
             main.move_f_or_b(2,"f")
             main.rolldicebutton.config(state="normal")
-
         main.card_blue_1_frame = tk.Frame(main.root, bg="white", bd=5, relief="ridge")
         main.card_blue_1_title = tk.Label(main.card_blue_1_frame,
-                                        text="🌧 BLUE CARD",
-                                        font=("Arial",20,"bold"),
-                                        bg="white",
-                                        fg="blue")
+                                text="🌧 BLUE CARD",
+                                font=("Arial",20,"bold"),
+                                bg="white",
+                                fg="blue")
         main.card_blue_1_label_middle = tk.Label(main.card_blue_1_frame,
-                                                text="Heavy rain helps you grow.",
-                                                font=("Arial",16),
-                                                bg="white")
+                                        text="Heavy rain helps you grow.",
+                                        font=("Arial",16),
+                                        bg="white")
         main.card_blue_1_label_middle_down = tk.Label(main.card_blue_1_frame,
-                                                    text="Move forward 2 spaces.",
-                                                    font=("Arial",14,"bold"),
-                                                    bg="white",
-                                                    fg="green")
-        main.card_blue_1_continue = tk.Button(main.card_blue_1_frame,
-                                            text="Continue")
+                                                  text="Move forward 2 spaces.",
+                                                  font=("Arial",14,"bold"),
+                                                  bg="white",
+                                                  fg="green")
+        main.card_blue_1_continue = tk.Button(main.card_blue_1_frame,text = "continue")
         main.card_blue_1_title.pack(pady=20)
         main.card_blue_1_label_middle.pack(pady=20)
         main.card_blue_1_label_middle_down.pack(pady=20)
         main.card_blue_1_continue.pack(side="bottom", pady=20)
-
         # ===========================
         # BLUE CARD 2
         # ===========================
@@ -690,7 +751,6 @@ class SeedAdventure:
         main.card_blue_2_label_middle.pack(pady=20)
         main.card_blue_2_label_middle_down.pack(pady=20)
         main.card_blue_2_continue.pack(side="bottom", pady=20)
-
         # ===========================
         # BLUE CARD 3
         # ===========================
@@ -715,7 +775,6 @@ class SeedAdventure:
         main.card_blue_3_label_middle.pack(pady=20)
         main.card_blue_3_label_middle_down.pack(pady=20)
         main.card_blue_3_continue.pack(side="bottom", pady=20)
-
         # ===========================
         # BLUE CARD 4
         # ===========================
@@ -740,7 +799,6 @@ class SeedAdventure:
         main.card_blue_4_label_middle.pack(pady=20)
         main.card_blue_4_label_middle_down.pack(pady=20)
         main.card_blue_4_continue.pack(side="bottom", pady=20)
-
         # ===========================
         # BLUE CARD 5
         # ===========================
@@ -765,7 +823,6 @@ class SeedAdventure:
         main.card_blue_5_label_middle.pack(pady=20)
         main.card_blue_5_label_middle_down.pack(pady=20)
         main.card_blue_5_continue.pack(side="bottom", pady=20)
-
         main.card_blue_6_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_blue_6_title=tk.Label(main.card_blue_6_frame,text="🌧 BLUE CARD",font=("Arial",20,"bold"),bg="white",fg="blue")
         main.card_blue_6_label_middle=tk.Label(main.card_blue_6_frame,text="Fresh water helps you survive.",font=("Arial",16),bg="white")
@@ -775,7 +832,6 @@ class SeedAdventure:
         main.card_blue_6_label_middle.pack(pady=20)
         main.card_blue_6_label_middle_down.pack(pady=20)
         main.card_blue_6_continue.pack(side="bottom",pady=20)
-
         main.card_blue_7_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_blue_7_title=tk.Label(main.card_blue_7_frame,text="🌧 BLUE CARD",font=("Arial",20,"bold"),bg="white",fg="blue")
         main.card_blue_7_label_middle=tk.Label(main.card_blue_7_frame,text="Rain washes away obstacles.",font=("Arial",16),bg="white")
@@ -785,7 +841,6 @@ class SeedAdventure:
         main.card_blue_7_label_middle.pack(pady=20)
         main.card_blue_7_label_middle_down.pack(pady=20)
         main.card_blue_7_continue.pack(side="bottom",pady=20)
-
         main.card_blue_8_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_blue_8_title=tk.Label(main.card_blue_8_frame,text="🌧 BLUE CARD",font=("Arial",20,"bold"),bg="white",fg="blue")
         main.card_blue_8_label_middle=tk.Label(main.card_blue_8_frame,text="Your seed floats to a new habitat.",font=("Arial",16),bg="white")
@@ -795,7 +850,6 @@ class SeedAdventure:
         main.card_blue_8_label_middle.pack(pady=20)
         main.card_blue_8_label_middle_down.pack(pady=20)
         main.card_blue_8_continue.pack(side="bottom",pady=20)
-
         main.card_blue_9_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_blue_9_title=tk.Label(main.card_blue_9_frame,text="🌧 BLUE CARD",font=("Arial",20,"bold"),bg="white",fg="blue")
         main.card_blue_9_label_middle=tk.Label(main.card_blue_9_frame,text="The current moves you quickly.",font=("Arial",16),bg="white")
@@ -805,7 +859,6 @@ class SeedAdventure:
         main.card_blue_9_label_middle.pack(pady=20)
         main.card_blue_9_label_middle_down.pack(pady=20)
         main.card_blue_9_continue.pack(side="bottom",pady=20)
-
         main.card_blue_10_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_blue_10_title=tk.Label(main.card_blue_10_frame,text="🌧 BLUE CARD",font=("Arial",20,"bold"),bg="white",fg="blue")
         main.card_blue_10_label_middle=tk.Label(main.card_blue_10_frame,text="You reach the perfect place to grow.",font=("Arial",16),bg="white")
@@ -815,7 +868,6 @@ class SeedAdventure:
         main.card_blue_10_label_middle.pack(pady=20)
         main.card_blue_10_label_middle_down.pack(pady=20)
         main.card_blue_10_continue.pack(side="bottom",pady=20)
-
         main.card_red_11_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_11_title=tk.Label(main.card_red_11_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_11_label_middle=tk.Label(main.card_red_11_frame,text="A bird eats your fruit and carries the seed.",font=("Arial",16),bg="white")
@@ -825,7 +877,6 @@ class SeedAdventure:
         main.card_red_11_label_middle.pack(pady=20)
         main.card_red_11_label_middle_down.pack(pady=20)
         main.card_red_11_continue.pack(side="bottom",pady=20)
-
         main.card_red_12_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_12_title=tk.Label(main.card_red_12_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_12_label_middle=tk.Label(main.card_red_12_frame,text="A squirrel buries your seed.",font=("Arial",16),bg="white")
@@ -835,7 +886,6 @@ class SeedAdventure:
         main.card_red_12_label_middle.pack(pady=20)
         main.card_red_12_label_middle_down.pack(pady=20)
         main.card_red_12_continue.pack(side="bottom",pady=20)
-
         main.card_red_13_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_13_title=tk.Label(main.card_red_13_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_13_label_middle=tk.Label(main.card_red_13_frame,text="An elephant drops your seed far away.",font=("Arial",16),bg="white")
@@ -845,7 +895,6 @@ class SeedAdventure:
         main.card_red_13_label_middle.pack(pady=20)
         main.card_red_13_label_middle_down.pack(pady=20)
         main.card_red_13_continue.pack(side="bottom",pady=20)
-
         main.card_red_14_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_14_title=tk.Label(main.card_red_14_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_14_label_middle=tk.Label(main.card_red_14_frame,text="A monkey carries your fruit to another tree.",font=("Arial",16),bg="white")
@@ -855,7 +904,6 @@ class SeedAdventure:
         main.card_red_14_label_middle.pack(pady=20)
         main.card_red_14_label_middle_down.pack(pady=20)
         main.card_red_14_continue.pack(side="bottom",pady=20)
-
         main.card_red_15_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_15_title=tk.Label(main.card_red_15_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_15_label_middle=tk.Label(main.card_red_15_frame,text="A deer carries your seed in its fur.",font=("Arial",16),bg="white")
@@ -865,7 +913,6 @@ class SeedAdventure:
         main.card_red_15_label_middle.pack(pady=20)
         main.card_red_15_label_middle_down.pack(pady=20)
         main.card_red_15_continue.pack(side="bottom",pady=20)
-
         main.card_red_16_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_16_title=tk.Label(main.card_red_16_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_16_label_middle=tk.Label(main.card_red_16_frame,text="A fox brushes past and carries your seed.",font=("Arial",16),bg="white")
@@ -875,7 +922,6 @@ class SeedAdventure:
         main.card_red_16_label_middle.pack(pady=20)
         main.card_red_16_label_middle_down.pack(pady=20)
         main.card_red_16_continue.pack(side="bottom",pady=20)
-
         main.card_red_17_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_17_title=tk.Label(main.card_red_17_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_17_label_middle=tk.Label(main.card_red_17_frame,text="A rabbit carries your seed to a meadow.",font=("Arial",16),bg="white")
@@ -885,7 +931,6 @@ class SeedAdventure:
         main.card_red_17_label_middle.pack(pady=20)
         main.card_red_17_label_middle_down.pack(pady=20)
         main.card_red_17_continue.pack(side="bottom",pady=20)
-
         main.card_red_18_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_18_title=tk.Label(main.card_red_18_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_18_label_middle=tk.Label(main.card_red_18_frame,text="A bird drops your seed in fertile soil.",font=("Arial",16),bg="white")
@@ -895,7 +940,6 @@ class SeedAdventure:
         main.card_red_18_label_middle.pack(pady=20)
         main.card_red_18_label_middle_down.pack(pady=20)
         main.card_red_18_continue.pack(side="bottom",pady=20)
-
         main.card_red_19_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_19_title=tk.Label(main.card_red_19_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_19_label_middle=tk.Label(main.card_red_19_frame,text="An animal leaves your seed near a river.",font=("Arial",16),bg="white")
@@ -905,7 +949,6 @@ class SeedAdventure:
         main.card_red_19_label_middle.pack(pady=20)
         main.card_red_19_label_middle_down.pack(pady=20)
         main.card_red_19_continue.pack(side="bottom",pady=20)
-
         main.card_red_20_frame=tk.Frame(main.root,bg="white",bd=5,relief="ridge")
         main.card_red_20_title=tk.Label(main.card_red_20_frame,text="🍎 RED CARD",font=("Arial",20,"bold"),bg="white",fg="red")
         main.card_red_20_label_middle=tk.Label(main.card_red_20_frame,text="A herd of animals spreads your seeds widely.",font=("Arial",16),bg="white")
