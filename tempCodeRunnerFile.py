@@ -3,17 +3,10 @@ import random as r
 import winsound as w
 import time as t
 import os as o
-import sys
 class SeedAdventure:
-    def resource_path(main,relative_path):
-        if getattr(sys, "frozen", False):
-            base_path = sys._MEIPASS
-        else:
-            base_path = o.path.dirname(o.path.abspath(__file__))    
-        return o.path.join(base_path, relative_path)
     def __init__(main, root):
-        main.DICE_SOUND = main.resource_path(o.path.join("Assets", "Sounds", "Wav", "dice_sound.wav"))
-        main.CARD_SOUND = main.resource_path(o.path.join("Assets", "Sounds", "Wav", "Card_pop_sound.wav"))
+        main.DICE_SOUND = o.path.join("Assets","Sounds","Wav","dice_sound.wav")
+        main.CARD_SOUND = o.path.join("Assets","Sounds","Wav","Card_pop_sound.wav")
         main.root = root
         main.player_position = 0
         main.is_animating = False
@@ -415,7 +408,6 @@ class SeedAdventure:
             main.move_f_or_b(3, "b")
 
             print("Position after:", main.player_position)
-            main.rolldicebutton.config(state = "normal")
 
         def continue_blue_2():
             main.card_blue_2_frame.place_forget()
