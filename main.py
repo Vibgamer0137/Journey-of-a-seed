@@ -313,9 +313,10 @@ class SeedAdventure:
         main.animate_move_steps -= 1
 
         main.root.after(
-            150,
+            550,
             lambda: main.animate_player_step(after_move)
         )
+        main.check_win()
     def animate_dice(main):
         if main.dice_animation_steps <= 0:
             main.dice_animation_running = False
@@ -338,7 +339,7 @@ class SeedAdventure:
 
         main.dice_animation_steps -= 1
 
-        main.root.after(100, main.animate_dice)
+        main.root.after(150, main.animate_dice)
     def move_f_or_b(main, how_much_to_move, f_or_b):
         if main.is_animating:
             print("Already moving — ignoring movement request.")
@@ -402,8 +403,8 @@ class SeedAdventure:
             # Start dice animation
             main.dice_animation_steps = 10
             main.dice_animation_running = True
-
             main.animate_dice()
+
                 # Wait until animation finishes before showing the card
         def continue_blue_1():
             print("BLUE CARD 1 PRESSED")
@@ -412,7 +413,7 @@ class SeedAdventure:
 
             print("Position before:", main.player_position)
 
-            main.move_f_or_b(3, "b")
+            main.move_f_or_b(4, "b")
 
             print("Position after:", main.player_position)
             main.rolldicebutton.config(state = "normal")
