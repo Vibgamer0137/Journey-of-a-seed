@@ -243,7 +243,7 @@ class SeedAdventure:
                 )
             main.card = r.choice(green_cards)
             main.place_card_responsive(main.card)
-            main.rolleddicebuttonlabel.place()
+            main.rolleddicebuttonlabel.place(x=10,y=65)
         elif current_colour == main.colours[3]:
             main.rolleddicebuttonlabel.place_forget()
             main.game.place_forget()
@@ -374,8 +374,9 @@ class SeedAdventure:
             main.root.after(100, main.check_win)  # Check again in 100 ms
     def show_win_screen(main):
         #w.PlaySound("", w.SND_FILENAME | w.SND_ASYNC)
+        tree_image_location = main.resource_path(o.path.join("Assets","Images","Supported types","tree.png"))
         main.tree_image = tk.PhotoImage(
-            file=r"C:\Users\Sai Varun\Tkinter\Journey of a seed\Assets\Images\Supported types\tree.png")
+            file=tree_image_location)
         # Stop background sound (optional)
         # winsound.PlaySound(None, 0)
 
