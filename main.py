@@ -1175,7 +1175,7 @@ class SeedAdventure:
                                         font=("Arial",16),
                                         bg="white")
         main.card_blue_1_label_middle_down = tk.Label(main.card_blue_1_frame,
-                                                  text="Move back 3 spaces spaces.",
+                                                  text="Move back 3 spaces.",
                                                   font=("Arial",14,"bold"),
                                                   bg="white",
                                                   fg="green")
