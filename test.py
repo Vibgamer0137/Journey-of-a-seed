@@ -1,7 +1,7 @@
 import re
 import csv
 
-python_file = "main.py"
+python_file = "main_Resizable.py"
 csv_file = "card_analysis.csv"
 
 # --------------------------------------------------
